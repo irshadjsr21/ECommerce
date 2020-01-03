@@ -1,0 +1,12 @@
+@import 'variables';
+
+body {
+  padding: 50px;
+  color: $font-color;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00b7ff;
+  font-weight: bold;
+}
