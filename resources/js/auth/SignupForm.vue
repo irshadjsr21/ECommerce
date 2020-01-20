@@ -14,11 +14,11 @@
       <input type="password" name="password" placeholder="Password" />
       <br />
       <br />
+      <csrf-input />
       <button type="submit" @click.prevent="submit">Signup</button>
     </form>
   </div>
 </template>
-
 
 <script>
 export default {

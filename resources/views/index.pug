@@ -5,4 +5,5 @@ block content
   p Welcome to #{title}
   if isLoggedIn
     form(action="/logout", method="post")
+      csrf-input
       button(type="submit") Logout 
