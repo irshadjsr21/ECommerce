@@ -3,3 +3,6 @@ extends layout
 block content
   hello-world
   p Welcome to #{title}
+  if isLoggedIn
+    form(action="/logout", method="post")
+      button(type="submit") Logout 
