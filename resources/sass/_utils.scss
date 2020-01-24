@@ -1,0 +1,118 @@
+/*
+  ========= Button Classes =========
+*/
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  box-shadow: $btn-shadow;
+  font-weight: 500;
+}
+
+.btn.btn-simple {
+  box-shadow: none;
+}
+
+@each $key, $value in $btn-types-color {
+  .btn-#{$key} {
+    background-color: map-get($map: $value, $key: 'background');
+    color: map-get($map: $value, $key: 'color');
+  }
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 8px 12px;
+  }
+}
+
+/*
+  ========= Flex properties =========
+*/
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.justify-content-space-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+/*
+  ========= Margin and paddings =========
+*/
+
+@each $key, $value in $margin-sizes {
+  .m-#{$key} {
+    margin: $value;
+  }
+
+  .ml-#{$key} {
+    margin-left: $value;
+  }
+
+  .mr-#{$key} {
+    margin-right: $value;
+  }
+
+  .mb-#{$key} {
+    margin-bottom: $value;
+  }
+
+  .my-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+
+  .mx-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}
+
+@each $key, $value in $padding-sizes {
+  .p-#{$key} {
+    margin: $value;
+  }
+
+  .pl-#{$key} {
+    margin-left: $value;
+  }
+
+  .pr-#{$key} {
+    margin-right: $value;
+  }
+
+  .pb-#{$key} {
+    margin-bottom: $value;
+  }
+
+  .py-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+
+  .px-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}

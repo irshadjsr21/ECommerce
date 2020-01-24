@@ -4,11 +4,13 @@ import HelloWorld from './HelloWorld';
 import SignupForm from './auth/SignupForm';
 import LoginForm from './auth/LoginForm';
 import CsrfInput from './components/CsrfInput';
+import SearchBar from './components/SearchBar';
 
 Vue.component('csrfInput', CsrfInput);
 Vue.component('helloWorld', HelloWorld);
 Vue.component('signupForm', SignupForm);
 Vue.component('loginForm', LoginForm);
+Vue.component('searchBar', SearchBar);
 
 Vue.mixin({
   methods: {

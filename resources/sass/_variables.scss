@@ -1,1 +1,58 @@
-$font-color: #000;
+/*
+  ========== Colors Variable ==========
+*/
+
+$text-color: #383838;
+$bg-color: #f9f9f9;
+$brand-color: #2f6dca;
+$brand-counter-color: #ffffff;
+$off-white-color: #f2f2f2;
+$grey-color: #f2f2f2;
+$danger-color: #e93f3f;
+
+/*
+  ========== Shadow Variable ==========
+*/
+
+$component-shadow: 0px 0px 3px rgba(0, 0, 0, 0.17);
+$btn-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
+
+/*
+  ========= Class specifications ========
+*/
+
+$margin-sizes: (
+  '0': 0rem,
+  '2': 0.125rem,
+  '4': 0.25rem,
+  '6': 0.375rem,
+  '8': 0.5rem,
+  '10': 0.525rem,
+  's': 0.75rem,
+  'm': 0.9375rem,
+  'l': 1.25rem,
+  'xl': 1.5625rem
+);
+$padding-sizes: (
+  '0': 0rem,
+  '2': 0.125rem,
+  '4': 0.25rem,
+  '6': 0.375rem,
+  '8': 0.5rem,
+  '10': 0.525rem,
+  's': 0.75rem,
+  'm': 0.9375rem,
+  'l': 1.25rem,
+  'xl': 1.5625rem
+);
+
+$btn-types-color: (
+  'default': (
+    'color': $text-color,
+    'background': $brand-counter-color
+  ),
+  'primary': (
+    'color': $brand-counter-color,
+    'background': $brand-color
+  )
+);
