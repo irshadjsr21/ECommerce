@@ -30,6 +30,20 @@
 }
 
 /*
+  ========= Andhor Classes =========
+*/
+
+.anchor-reset {
+  text-decoration: none;
+  color: $text-color;
+
+  &:active {
+    color: $text-color;
+    text-decoration: none;
+  }
+}
+
+/*
   ========= Flex properties =========
 */
 
@@ -39,6 +53,10 @@
 
 .flex-column {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .justify-content-center {
@@ -55,6 +73,34 @@
 
 .align-items-center {
   align-items: center;
+}
+
+/*
+  ========= Text properties =========
+*/
+
+.text-center {
+  text-align: center;
+}
+
+.text-small {
+  font-size: 0.8rem;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+/*
+  ========= Width and height =========
+*/
+
+.w-100 {
+  width: 100%;
 }
 
 /*
