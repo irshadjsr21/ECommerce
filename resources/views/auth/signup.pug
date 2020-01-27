@@ -2,4 +2,10 @@ extends ../layout
 
 
 block content
-  signup-form(old-inputs=oldInputs, errors=errors)
+  .authCard.my-xl
+    img.cardImg.cardImgDesktop(src="/images/signup.png", alt="")
+    img.cardImg.cardImgMobile(src="/images/signup-m.png", alt="")
+    .cardContent.flex.flex-column.justify-content-space-between
+      signup-form(old-inputs=oldInputs, server-error=errors)
+      .flex.justify-content-center
+        a.anchor-reset.text-primary.text-center(href="/login") Alreay have an account? Login.

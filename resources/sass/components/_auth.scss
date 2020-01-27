@@ -1,0 +1,77 @@
+.authCard {
+  background-color: $brand-counter-color;
+  box-shadow: $component-shadow;
+  display: flex;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+
+  .cardImgDesktop {
+    display: block;
+  }
+
+  .cardImgMobile {
+    display: none;
+  }
+
+  .cardImg {
+    max-width: 400px;
+    min-width: 200px;
+    width: 40%;
+    height: auto;
+    max-height: 700px;
+  }
+
+  .cardContent {
+    flex: 1;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .authCard {
+    width: 70%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .authCard {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .authCard {
+    flex-direction: column;
+    .cardImgDesktop {
+      display: none;
+    }
+
+    .cardImgMobile {
+      display: block;
+    }
+
+    .cardImg {
+      width: 100%;
+      height: auto;
+      max-width: none;
+      min-width: none;
+      max-height: none;
+    }
+
+    .cardContent {
+      padding: 30px;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .authCard {
+    width: 90%;
+
+    .cardContent {
+      padding: 20px;
+    }
+  }
+}

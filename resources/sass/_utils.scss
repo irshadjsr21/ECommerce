@@ -10,10 +10,15 @@
   text-decoration: none;
   box-shadow: $btn-shadow;
   font-weight: 500;
+  font-size: 1rem;
 }
 
 .btn.btn-simple {
   box-shadow: none;
+}
+
+.btn.btn-lg {
+  font-size: 1.2rem;
 }
 
 @each $key, $value in $btn-types-color {
@@ -30,16 +35,52 @@
 }
 
 /*
-  ========= Andhor Classes =========
+  ========= Anchor Classes =========
 */
 
 .anchor-reset {
   text-decoration: none;
-  color: $text-color;
+  color: initial;
 
   &:active {
-    color: $text-color;
+    color: initial;
     text-decoration: none;
+  }
+}
+
+/*
+  ========= Form Classes =========
+*/
+
+.input-container {
+  .input-label {
+    font-size: 1rem;
+  }
+
+  .input-box {
+    width: 100%;
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: $input-shadow;
+    margin: 0.3rem 0;
+
+    &:focus {
+      outline-color: $brand-color;
+    }
+
+    &.input-box-invalid {
+      outline: 1px solid $danger-color;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .input-container {
+    .input-box {
+      padding: 8px;
+    }
   }
 }
 
@@ -95,6 +136,17 @@
   font-weight: bold;
 }
 
+.text-primary {
+  color: $brand-color;
+}
+
+.text-danger {
+  color: $danger-color;
+}
+
+.text-mute {
+  opacity: 0.8;
+}
 /*
   ========= Width and height =========
 */
@@ -124,6 +176,10 @@
     margin-bottom: $value;
   }
 
+  .mt-#{$key} {
+    margin-top: $value;
+  }
+
   .my-#{$key} {
     margin-top: $value;
     margin-bottom: $value;
@@ -137,28 +193,32 @@
 
 @each $key, $value in $padding-sizes {
   .p-#{$key} {
-    margin: $value;
+    padding: $value;
   }
 
   .pl-#{$key} {
-    margin-left: $value;
+    padding-left: $value;
   }
 
   .pr-#{$key} {
-    margin-right: $value;
+    padding-right: $value;
   }
 
   .pb-#{$key} {
-    margin-bottom: $value;
+    padding-bottom: $value;
+  }
+
+  .pt-#{$key} {
+    padding-top: $value;
   }
 
   .py-#{$key} {
-    margin-top: $value;
-    margin-bottom: $value;
+    padding-top: $value;
+    padding-bottom: $value;
   }
 
   .px-#{$key} {
-    margin-left: $value;
-    margin-right: $value;
+    padding-left: $value;
+    padding-right: $value;
   }
 }
