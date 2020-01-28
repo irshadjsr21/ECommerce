@@ -1,0 +1,225 @@
+/*
+  ========= Button Classes =========
+*/
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  box-shadow: $btn-shadow;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn.btn-simple {
+  box-shadow: none;
+}
+
+.btn.btn-lg {
+  font-size: 1.2rem;
+}
+
+@each $key, $value in $btn-types-color {
+  .btn-#{$key} {
+    background-color: map-get($map: $value, $key: 'background');
+    color: map-get($map: $value, $key: 'color');
+  }
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 8px 12px;
+  }
+}
+
+/*
+  ========= Anchor Classes =========
+*/
+
+.anchor-reset {
+  text-decoration: none;
+  color: initial;
+
+  &:active {
+    color: initial;
+    text-decoration: none;
+  }
+}
+
+/*
+  ========= Form Classes =========
+*/
+
+.input-container {
+  .input-label {
+    font-size: 1rem;
+  }
+
+  .input-box {
+    width: 100%;
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: $input-shadow;
+    margin: 0.3rem 0;
+
+    &:focus {
+      outline-color: $brand-color;
+    }
+
+    &.input-box-invalid {
+      outline: 1px solid $danger-color;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .input-container {
+    .input-box {
+      padding: 8px;
+    }
+  }
+}
+
+/*
+  ========= Flex properties =========
+*/
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.justify-content-space-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+/*
+  ========= Text properties =========
+*/
+
+.text-center {
+  text-align: center;
+}
+
+.text-small {
+  font-size: 0.8rem;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-primary {
+  color: $brand-color;
+}
+
+.text-danger {
+  color: $danger-color;
+}
+
+.text-mute {
+  opacity: 0.8;
+}
+/*
+  ========= Width and height =========
+*/
+
+.w-100 {
+  width: 100%;
+}
+
+/*
+  ========= Margin and paddings =========
+*/
+
+@each $key, $value in $margin-sizes {
+  .m-#{$key} {
+    margin: $value;
+  }
+
+  .ml-#{$key} {
+    margin-left: $value;
+  }
+
+  .mr-#{$key} {
+    margin-right: $value;
+  }
+
+  .mb-#{$key} {
+    margin-bottom: $value;
+  }
+
+  .mt-#{$key} {
+    margin-top: $value;
+  }
+
+  .my-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+
+  .mx-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}
+
+@each $key, $value in $padding-sizes {
+  .p-#{$key} {
+    padding: $value;
+  }
+
+  .pl-#{$key} {
+    padding-left: $value;
+  }
+
+  .pr-#{$key} {
+    padding-right: $value;
+  }
+
+  .pb-#{$key} {
+    padding-bottom: $value;
+  }
+
+  .pt-#{$key} {
+    padding-top: $value;
+  }
+
+  .py-#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+
+  .px-#{$key} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+}

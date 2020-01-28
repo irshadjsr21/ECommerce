@@ -1,0 +1,83 @@
+.topbar {
+  display: flex;
+  background-color: $brand-counter-color;
+  padding: 15px;
+  box-shadow: $component-shadow;
+  justify-content: space-between;
+
+  .logo {
+    height: 25px;
+    width: auto;
+  }
+
+  .searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .searchInput {
+      background-color: $off-white-color;
+      width: 450px;
+      height: 35px;
+      outline: none;
+      border: none;
+      border-radius: 2px;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .searchIcon {
+      outline: none;
+      border: none;
+      background-color: $brand-color;
+      color: $brand-counter-color;
+      height: 35px;
+      width: 38px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 0 2px 2px 0;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .topbar {
+    .logo {
+      height: 22px;
+    }
+    .searchBar {
+      .searchInput {
+        width: 400px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-wrap: wrap;
+
+    .btnContainer,
+    .logo {
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      height: 20px;
+    }
+
+    .searchBar {
+      width: 100%;
+      order: 3;
+      .searchInput {
+        width: 100%;
+        height: 32px;
+      }
+
+      .searchIcon {
+        height: 32px;
+      }
+    }
+  }
+}

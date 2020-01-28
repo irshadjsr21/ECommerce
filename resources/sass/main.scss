@@ -1,12 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500&display=swap');
 @import 'variables';
+@import 'utils';
+@import 'components/topbar';
+@import 'components/footer';
+@import 'components/auth';
 
-body {
-  padding: 50px;
-  color: $font-color;
-  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+* {
+  box-sizing: border-box;
 }
 
-a {
-  color: #00b7ff;
-  font-weight: bold;
+html {
+  font-size: 16px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  color: $text-color;
+  font-family: 'Montserrat', sans-serif;
+  background-color: $bg-color;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
 }
