@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const initMiddleware = require('./middlewares/init');
 const indexRouter = require('./routes/index');
-
+const createAdmin = require('./utils/createAdmin');
 const app = express();
 
 // view engine setup
@@ -29,5 +29,7 @@ app.use(function(err, req, res, next) {
   res.status(res.locals.status);
   res.render('error');
 });
+
+createAdmin();
 
 module.exports = app;

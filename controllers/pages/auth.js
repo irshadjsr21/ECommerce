@@ -10,22 +10,10 @@ module.exports = {
 
   loginAction: route(
     async (req, res) => {
-      const { validationError, oldInputs } = req;
-
-      if (validationError && Object.keys(validationError).length > 0) {
-        res.status(400).render('auth/login', {
-          errors: validationError,
-          oldInputs,
-          title: 'Login'
-        });
-        return;
-      }
-
       const user = await User.findOne({ where: { email: req.body.email } });
       if (!user) {
         res.status(404).render('auth/login', {
           errors: { email: errorStrings.userNotFound },
-          oldInputs,
           title: 'Login'
         });
         return;
@@ -33,10 +21,9 @@ module.exports = {
 
       const validPassword = await user.checkPassword(req.body.password);
 
-      if (!validPassword) {
+      if (!validPassword || user.type != User.TYPES.default) {
         res.status(401).render('auth/login', {
           errors: { password: errorStrings.incorrectPassword },
-          oldInputs,
           title: 'Login'
         });
         return;
@@ -51,7 +38,9 @@ module.exports = {
       validation: {
         validators: [validators.login],
         throwError: false,
-        asObject: true
+        asObject: true,
+        renderPage: 'auth/login',
+        renderData: { title: 'Login' }
       },
       inputs: ['email', 'password'],
       oldInputs: ['email']
@@ -64,22 +53,12 @@ module.exports = {
 
   signupAction: route(
     async (req, res) => {
-      const { validationError, inputBody, oldInputs } = req;
-
-      if (validationError && Object.keys(validationError).length > 0) {
-        res.status(400).render('auth/signup', {
-          errors: validationError,
-          oldInputs,
-          title: 'Signup'
-        });
-        return;
-      }
+      const { inputBody } = res.locals;
 
       const doExist = await User.findOne({ where: { email: req.body.email } });
       if (doExist) {
         res.status(409).render('auth/signup', {
           errors: { email: errorStrings.userAlreadyExist },
-          oldInputs,
           title: 'Signup'
         });
         return;
@@ -96,7 +75,9 @@ module.exports = {
       validation: {
         validators: [validators.signup],
         throwError: false,
-        asObject: true
+        asObject: true,
+        renderPage: 'auth/signup',
+        renderData: { title: 'Signup' }
       },
       inputs: ['firstName', 'lastName', 'email', 'password'],
       oldInputs: ['firstName', 'lastName', 'email']

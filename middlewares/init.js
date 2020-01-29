@@ -10,6 +10,8 @@ const logger = require('morgan');
 const csurf = require('csurf');
 
 const session = require('./session');
+const addUser = require('./addUser');
+const { ADMIN } = require('../config');
 
 module.exports = [
   logger('dev'),
@@ -21,11 +23,9 @@ module.exports = [
   }),
   express.static(path.join(__dirname, '../', 'public')),
   session(),
+  addUser(),
   (req, res, next) => {
-    if (req.session.userId) {
-      res.locals.isLoggedIn = true;
-    }
-    res.locals.csrfToken = req.csrfToken();
+    res.locals.adminPath = ADMIN.PATH;
     next();
   }
 ];

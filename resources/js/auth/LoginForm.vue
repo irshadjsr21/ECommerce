@@ -1,5 +1,10 @@
 <template>
-  <form ref="form" action="/login" method="post" class="mb-l">
+  <form
+    ref="form"
+    :action="forAdmin ? adminPath + '/login' : '/login'"
+    method="post"
+    class="mb-l"
+  >
     <input-box
       type="email"
       label="Email"
@@ -14,7 +19,18 @@
       :error="errors.password"
       v-model="values.password"
     />
+    <input-box
+      type="password"
+      label="Secret"
+      name="secret"
+      :error="errors.secret"
+      v-model="values.secret"
+      v-if="forAdmin"
+    />
     <csrf-input />
+    <small class="text-danger" v-if="errors && errors.default">{{
+      errors.default
+    }}</small>
     <div class="flex justify-content-center mt-xl">
       <button
         type="submit"
@@ -28,11 +44,12 @@
 </template>
 
 <script>
-import schema from '../validators/login';
+import loginSchema from '../validators/login';
+import adminLoginSchema from '../validators/adminLogin';
 import validate from '../validators';
 
 export default {
-  props: ['oldInputs', 'serverError'],
+  props: ['oldInputs', 'serverError', 'forAdmin', 'adminPath'],
   data() {
     return {
       values: {
@@ -61,14 +78,24 @@ export default {
           this.errors[key] = serverError[key];
         }
       }
+
+      if (this.forAdmin) {
+        this.values.secret = '';
+        this.errors.secret = '';
+      }
     } catch (error) {
       console.log(error);
     }
   },
 
   methods: {
+    getSchema() {
+      if (this.forAdmin) return adminLoginSchema;
+      return loginSchema;
+    },
+
     checkForm() {
-      this.errors = validate(schema, this.values) || {};
+      this.errors = validate(this.getSchema(), this.values) || {};
       return Object.keys(this.errors).length == 0;
     },
 

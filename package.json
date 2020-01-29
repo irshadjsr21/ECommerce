@@ -10,7 +10,7 @@
     "dev:start": "nodemon ./bin/www",
     "dev:build": "concurrently \"npm run dev:build:js\" \"npm run dev:build:css\"",
     "dev:build:js": "webpack --mode development --progress --hide-modules --watch",
-    "dev:build:css": "node-sass ./resources/sass/main.scss -o ./public/css/ --watch"
+    "dev:build:css": "node-sass ./resources/sass/main.scss ./public/css/main.css --watch"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
