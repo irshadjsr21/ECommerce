@@ -16,6 +16,9 @@ module.exports = {
 
   admin: {
     home: 'Admin home',
-    login: 'Login'
+    login: 'Login',
+    category: 'Category',
+    product: 'Product',
+    user: 'User'
   }
 };

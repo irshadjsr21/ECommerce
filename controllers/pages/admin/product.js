@@ -4,10 +4,10 @@ const { admin } = require('../../../strings/seo');
 module.exports = {
   home: route(
     async (req, res, next) => {
-      res.render('admin/index');
+      res.render('admin/product');
     },
     {
-      seo: admin.home
+      seo: admin.product
     }
   )
 };
