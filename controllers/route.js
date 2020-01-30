@@ -97,6 +97,30 @@ const createValidationMiddleware = ({
 };
 
 /**
+ * Returns a middleware which stores SEO variables in `res.locals.seo` object
+ * @param {Object|Function} seo The object or function specifing the SEO variables
+ */
+const createSeoMiddleware = seo => {
+  return async (req, res, next) => {
+    try {
+      res.locals.seo = {};
+      let seoObj = {};
+      if (typeof seo == 'function') seoObj = await seo(req, res);
+      else if (typeof seo == 'object') seoObj = seo;
+      else if (typeof seo == 'string') res.locals.seo.title = seo;
+
+      for (const key in seoObj) {
+        res.locals.seo[key] = seoObj[key];
+      }
+      next();
+    } catch (error) {
+      console.log(error);
+      next();
+    }
+  };
+};
+
+/**
  * This will create a series of middleware functions to execute common tasks
  * based on the options provided.
  *
@@ -111,6 +135,8 @@ const createValidationMiddleware = ({
  * @param {Boolean} options.validation.asObject Create error as object
  * @param {Boolean|Array} options.inputs If true returns inputs in `res.locals.inputBody`. One can also provide an array with required fields
  * @param {Boolean|Array} options.oldInputs If true returns inputs in `res.locals.oldInputs`. One can also provide an array with required fields
+ * @param {Object|Function} options.seo The SEO variable are stored in `res.locals`
+ * @param {Object|Function} options.validationBeforeSeo The SEO variable are stored before validation
  */
 const route = (
   controller,
@@ -121,6 +147,8 @@ const route = (
       throwError: false,
       asObject: false
     },
+    seo: null,
+    validationBeforeSeo: false,
     inputs: false,
     renderPage: null,
     renderData: null
@@ -155,6 +183,10 @@ const route = (
     });
   }
 
+  if (options.seo && !options.validationBeforeSeo) {
+    middlewareArray.push(createSeoMiddleware(options.seo));
+  }
+
   if (options.validation) {
     middlewareArray.push(options.validation.validators);
     middlewareArray.push(
@@ -166,6 +198,10 @@ const route = (
         renderPage: options.validation.renderPage
       })
     );
+  }
+
+  if (options.seo && options.validationBeforeSeo) {
+    middlewareArray.push(createSeoMiddleware(options.seo));
   }
 
   middlewareArray.push(customController);

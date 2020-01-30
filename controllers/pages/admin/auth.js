@@ -1,13 +1,18 @@
 const route = require('../../route');
 const { User } = require('../../../models');
 const validators = require('../../../validators/admin/auth');
-const { errors: errorStrings } = require('../../../strings');
+const { errors: errorStrings, seo: seoObject } = require('../../../strings');
 const { ADMIN } = require('../../../config');
 
 module.exports = {
-  loginPage: route(async (req, res) => {
-    res.render('auth/login', { title: 'Login', forAdmin: true });
-  }),
+  loginPage: route(
+    async (req, res) => {
+      res.render('auth/login', { forAdmin: true });
+    },
+    {
+      seo: seoObject.admin.login
+    }
+  ),
 
   loginAction: route(
     async (req, res) => {
@@ -15,8 +20,7 @@ module.exports = {
       if (!user) {
         res.status(401).render('auth/login', {
           errors: { default: errorStrings.incorrectAdminCredentials },
-          forAdmin: true,
-          title: 'Login'
+          forAdmin: true
         });
         return;
       }
@@ -30,8 +34,7 @@ module.exports = {
       ) {
         res.status(401).render('auth/login', {
           errors: { default: errorStrings.incorrectAdminCredentials },
-          forAdmin: true,
-          title: 'Login'
+          forAdmin: true
         });
         return;
       }
@@ -47,8 +50,9 @@ module.exports = {
         throwError: false,
         asObject: true,
         renderPage: 'auth/login',
-        renderData: { title: 'Login', forAdmin: true }
+        renderData: { forAdmin: true }
       },
+      seo: seoObject.admin.login,
       inputs: ['email', 'password', 'secret'],
       oldInputs: ['email']
     }

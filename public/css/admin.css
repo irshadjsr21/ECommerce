@@ -135,6 +135,9 @@ body {
 .text-bold {
   font-weight: bold; }
 
+.text-medium {
+  font-weight: 500; }
+
 .text-primary {
   color: #2f6dca; }
 

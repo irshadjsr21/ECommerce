@@ -2,7 +2,8 @@ div.w-100.h-100
   .topbar.topbar-sm
     label.navToggle(for="navToggle")
       i.material-icons.navToggleIcon menu
-    img.logo(src="/images/logo.svg")
+    a(href=adminPath)
+      img.logo(src="/images/logo.svg")
     .btnContainer.flex
       form(action="/logout", method="post")
         csrf-input

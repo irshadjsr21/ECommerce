@@ -1,20 +1,24 @@
 const route = require('../route');
 const { User } = require('../../models');
 const validators = require('../../validators/auth');
-const { errors: errorStrings } = require('../../strings');
+const { errors: errorStrings, seo: seoObject } = require('../../strings');
 
 module.exports = {
-  loginPage: route(async (req, res) => {
-    res.render('auth/login', { title: 'Login' });
-  }),
+  loginPage: route(
+    async (req, res) => {
+      res.render('auth/login');
+    },
+    {
+      seo: seoObject.user.login
+    }
+  ),
 
   loginAction: route(
     async (req, res) => {
       const user = await User.findOne({ where: { email: req.body.email } });
       if (!user) {
         res.status(404).render('auth/login', {
-          errors: { email: errorStrings.userNotFound },
-          title: 'Login'
+          errors: { email: errorStrings.userNotFound }
         });
         return;
       }
@@ -23,8 +27,7 @@ module.exports = {
 
       if (!validPassword || user.type != User.TYPES.default) {
         res.status(401).render('auth/login', {
-          errors: { password: errorStrings.incorrectPassword },
-          title: 'Login'
+          errors: { password: errorStrings.incorrectPassword }
         });
         return;
       }
@@ -39,17 +42,22 @@ module.exports = {
         validators: [validators.login],
         throwError: false,
         asObject: true,
-        renderPage: 'auth/login',
-        renderData: { title: 'Login' }
+        renderPage: 'auth/login'
       },
+      seo: seoObject.user.login,
       inputs: ['email', 'password'],
       oldInputs: ['email']
     }
   ),
 
-  signupPage: route(async (req, res) => {
-    res.render('auth/signup', { title: 'Signup' });
-  }),
+  signupPage: route(
+    async (req, res) => {
+      res.render('auth/signup');
+    },
+    {
+      seo: seoObject.user.signup
+    }
+  ),
 
   signupAction: route(
     async (req, res) => {
@@ -58,8 +66,7 @@ module.exports = {
       const doExist = await User.findOne({ where: { email: req.body.email } });
       if (doExist) {
         res.status(409).render('auth/signup', {
-          errors: { email: errorStrings.userAlreadyExist },
-          title: 'Signup'
+          errors: { email: errorStrings.userAlreadyExist }
         });
         return;
       }
@@ -76,9 +83,9 @@ module.exports = {
         validators: [validators.signup],
         throwError: false,
         asObject: true,
-        renderPage: 'auth/signup',
-        renderData: { title: 'Signup' }
+        renderPage: 'auth/signup'
       },
+      seo: seoObject.user.signup,
       inputs: ['firstName', 'lastName', 'email', 'password'],
       oldInputs: ['firstName', 'lastName', 'email']
     }
