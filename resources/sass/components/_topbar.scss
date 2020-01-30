@@ -4,6 +4,8 @@
   padding: 15px;
   box-shadow: $component-shadow;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
 
   .logo {
     height: 25px;
@@ -38,6 +40,14 @@
       align-items: center;
       border-radius: 0 2px 2px 0;
     }
+  }
+
+  &.topbar-sm {
+    padding: 10px 15px;
+  }
+
+  .navToggle {
+    display: none;
   }
 }
 
@@ -78,6 +88,17 @@
       .searchIcon {
         height: 32px;
       }
+    }
+
+    &.topbar-sm {
+      .logo,
+      .btnContainer {
+        margin-bottom: 0;
+      }
+    }
+
+    .navToggle {
+      display: block;
     }
   }
 }

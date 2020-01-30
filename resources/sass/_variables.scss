@@ -19,6 +19,12 @@ $btn-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
 $input-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
 
 /*
+  ========= Animation speeds ========
+*/
+
+$default-animation-time: 0.3s;
+
+/*
   ========= Class specifications ========
 */
 
@@ -28,7 +34,7 @@ $margin-sizes: (
   '4': 0.25rem,
   '6': 0.375rem,
   '8': 0.5rem,
-  '10': 0.525rem,
+  '10': 0.625rem,
   's': 0.75rem,
   'm': 0.9375rem,
   'l': 1.25rem,
@@ -40,7 +46,7 @@ $padding-sizes: (
   '4': 0.25rem,
   '6': 0.375rem,
   '8': 0.5rem,
-  '10': 0.525rem,
+  '10': 0.625rem,
   's': 0.75rem,
   'm': 0.9375rem,
   'l': 1.25rem,

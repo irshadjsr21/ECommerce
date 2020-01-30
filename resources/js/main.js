@@ -1,6 +1,5 @@
 import Vue from 'vue';
 
-import HelloWorld from './HelloWorld';
 import SignupForm from './auth/SignupForm';
 import LoginForm from './auth/LoginForm';
 import CsrfInput from './components/CsrfInput';
@@ -8,7 +7,6 @@ import SearchBar from './components/SearchBar';
 import InputBox from './components/InputBox';
 
 Vue.component('csrfInput', CsrfInput);
-Vue.component('helloWorld', HelloWorld);
 Vue.component('signupForm', SignupForm);
 Vue.component('loginForm', LoginForm);
 Vue.component('searchBar', SearchBar);

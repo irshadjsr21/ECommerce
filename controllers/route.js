@@ -63,7 +63,13 @@ const getValidationError = (req, asObject) => {
  * error or not. If set to false it will store the errors in req.validationError.
  * @param {Boolean} options.asObject If the error returned should be an object
  */
-const createValidationMiddleware = ({ errorMsg, throwError, asObject }) => {
+const createValidationMiddleware = ({
+  errorMsg,
+  throwError,
+  asObject,
+  renderPage,
+  renderData
+}) => {
   return async function(req, res, next) {
     const errors = getValidationError(req, asObject);
     if (
@@ -73,10 +79,44 @@ const createValidationMiddleware = ({ errorMsg, throwError, asObject }) => {
       if (throwError) {
         next(createError(400, { errors, code: 400, isCustom: true }, errorMsg));
         return;
-      } else req.validationError = errors;
+      } else res.locals.errors = errors;
+
+      if (renderPage) {
+        let dataObj = {};
+        if (renderData) {
+          if (typeof renderData == 'function') dataObj = await renderData();
+          else if (typeof renderData == 'object') dataObj = renderData;
+        }
+        res.render(renderPage, dataObj);
+        return;
+      }
     }
 
     next();
+  };
+};
+
+/**
+ * Returns a middleware which stores SEO variables in `res.locals.seo` object
+ * @param {Object|Function} seo The object or function specifing the SEO variables
+ */
+const createSeoMiddleware = seo => {
+  return async (req, res, next) => {
+    try {
+      res.locals.seo = {};
+      let seoObj = {};
+      if (typeof seo == 'function') seoObj = await seo(req, res);
+      else if (typeof seo == 'object') seoObj = seo;
+      else if (typeof seo == 'string') res.locals.seo.title = seo;
+
+      for (const key in seoObj) {
+        res.locals.seo[key] = seoObj[key];
+      }
+      next();
+    } catch (error) {
+      console.log(error);
+      next();
+    }
   };
 };
 
@@ -90,9 +130,13 @@ const createValidationMiddleware = ({ errorMsg, throwError, asObject }) => {
  * @param {Array} options.validation.validators Validators array
  * @param {String} options.validation.errorMsg Error message if validation failed
  * @param {Boolean} options.validation.throwError If true throws error if validation fails
+ * @param {String} options.validation.renderPage Render page on error
+ * @param {Object|Function} options.validation.renderData Function or object which will return render data for the page
  * @param {Boolean} options.validation.asObject Create error as object
- * @param {Boolean|Array} options.inputs If true returns inputs in `req.inputBody`. One can also provide an array with required fields
- * @param {Boolean|Array} options.oldInputs If true returns inputs in `req.oldInputs`. One can also provide an array with required fields
+ * @param {Boolean|Array} options.inputs If true returns inputs in `res.locals.inputBody`. One can also provide an array with required fields
+ * @param {Boolean|Array} options.oldInputs If true returns inputs in `res.locals.oldInputs`. One can also provide an array with required fields
+ * @param {Object|Function} options.seo The SEO variable are stored in `res.locals`
+ * @param {Object|Function} options.validationBeforeSeo The SEO variable are stored before validation
  */
 const route = (
   controller,
@@ -103,7 +147,11 @@ const route = (
       throwError: false,
       asObject: false
     },
-    inputs: false
+    seo: null,
+    validationBeforeSeo: false,
+    inputs: false,
+    renderPage: null,
+    renderData: null
   }
 ) => {
   const middlewareArray = [];
@@ -121,7 +169,7 @@ const route = (
     if (Array.isArray(options.inputs)) fields = options.inputs;
 
     middlewareArray.push((req, res, next) => {
-      req.inputBody = getInputs(req, fields);
+      res.locals.inputBody = getInputs(req, fields);
       next();
     });
   }
@@ -130,9 +178,13 @@ const route = (
     let fields = [];
     if (Array.isArray(options.oldInputs)) fields = options.oldInputs;
     middlewareArray.push((req, res, next) => {
-      req.oldInputs = getInputs(req, fields);
+      res.locals.oldInputs = getInputs(req, fields);
       next();
     });
+  }
+
+  if (options.seo && !options.validationBeforeSeo) {
+    middlewareArray.push(createSeoMiddleware(options.seo));
   }
 
   if (options.validation) {
@@ -141,9 +193,15 @@ const route = (
       createValidationMiddleware({
         throwError: options.validation.throwError,
         errorMsg: options.validation.errorMsg || errorStrings.validationError,
-        asObject: options.validation.asObject
+        asObject: options.validation.asObject,
+        renderData: options.validation.renderData,
+        renderPage: options.validation.renderPage
       })
     );
+  }
+
+  if (options.seo && options.validationBeforeSeo) {
+    middlewareArray.push(createSeoMiddleware(options.seo));
   }
 
   middlewareArray.push(customController);

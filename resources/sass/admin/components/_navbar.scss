@@ -1,0 +1,100 @@
+.adminNav {
+  width: 300px;
+  background-color: $text-color;
+  color: $brand-counter-color;
+  height: 100vh;
+  transition: width $default-animation-time;
+
+  .navToggle {
+    display: flex;
+    flex-direction: row-reverse;
+
+    .navToggleIcon {
+      padding: 15px;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+  }
+
+  .navContent {
+    margin-top: 4rem;
+
+    .linksContainer {
+      .link {
+        color: $brand-counter-color;
+        text-decoration: none;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+
+        .linkIcon {
+          font-size: 1.8rem;
+          margin-right: 1rem;
+        }
+      }
+
+      .link:hover {
+        background-color: lighten($color: $text-color, $amount: 10);
+      }
+
+      .link.active {
+        background-color: $brand-color;
+      }
+    }
+  }
+}
+
+#navToggle:checked ~ .adminNav {
+  width: 70px;
+
+  .navToggle {
+    justify-content: center;
+  }
+
+  .navContent {
+    .linksContainer {
+      .link {
+        .linkIcon {
+          margin-right: 0;
+        }
+        .linkText {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .adminNav {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform $default-animation-time;
+    transform: translateX(-100%);
+    z-index: 100;
+  }
+
+  #navToggle:checked ~ .adminNav {
+    width: 200px;
+    transform: translateX(0);
+
+    .navToggle {
+      justify-content: right;
+    }
+
+    .navContent {
+      .linksContainer {
+        .link {
+          .linkIcon {
+            margin-right: 1rem;
+          }
+          .linkText {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

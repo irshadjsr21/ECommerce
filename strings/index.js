@@ -4,7 +4,9 @@
  */
 
 const errors = require('./error');
+const seo = require('./seo');
 
 module.exports = {
-  errors
+  errors,
+  seo
 };

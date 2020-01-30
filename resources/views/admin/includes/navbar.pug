@@ -1,0 +1,21 @@
+input#navToggle.d-none(type="checkbox", name="")
+aside.adminNav
+  .navToggle
+    label(for="navToggle")
+      i.material-icons.navToggleIcon menu
+
+  .navContent
+    .linksContainer
+      a(class=(name=='dashboard' ? 'link active' : 'link') href=adminPath+"/")
+        i.linkIcon.material-icons speed
+        .linkText Dashboard
+      a(class=(name=='categories' ? 'link active' : 'link') href=adminPath+"/categories")
+        i.linkIcon.material-icons category
+        .linkText Categories
+      a(class=(name=='products' ? 'link active' : 'link') href=adminPath+"/products")
+        i.linkIcon.material-icons star
+        .linkText Products
+      a(class=(name=='users' ? 'link active' : 'link') href=adminPath+"/users")
+        i.linkIcon.material-icons person
+        .linkText Users
+
