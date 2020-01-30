@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "build": "concurrently \"npm run build:js\" \"npm run build:css\"",
+    "build": "npm run build:js && npm run build:css",
     "build:js": "webpack --mode production --progress --hide-modules",
-    "build:css": "node-sass ./resources/sass/main.scss -o ./public/css/ --output-style compressed",
+    "build:css": "npm run build:css:user && npm run build:css:admin",
+    "build:css:user": "node-sass ./resources/sass/main.scss ./public/css/main.css --output-style compressed",
+    "build:css:admin": "node-sass ./resources/sass/admin/main.scss ./public/css/admin.css --output-style compressed",
     "dev:start": "nodemon ./bin/www",
     "dev:build": "concurrently \"npm run dev:build:js\" \"npm run dev:build:css\"",
     "dev:build:js": "webpack --mode development --progress --hide-modules --watch",
-    "dev:build:css": "node-sass ./resources/sass/main.scss ./public/css/main.css --watch"
+    "dev:build:css": "concurrently \"npm run dev:build:css:user\" \"npm run dev:build:css:admin\"",
+    "dev:build:css:user": "node-sass ./resources/sass/main.scss ./public/css/main.css --watch",
+    "dev:build:css:admin": "node-sass ./resources/sass/admin/main.scss ./public/css/admin.css --watch"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",

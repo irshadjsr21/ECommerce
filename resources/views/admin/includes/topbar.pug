@@ -1,7 +1,11 @@
-.topbar.topbar-sm.flex.justify-content-around.align-items-center
-  img.logo(src="/images/logo.svg")
-  .btnContainer.flex
-    form(action="/logout", method="post")
-      csrf-input
-      button.btn.btn-default.btn-simple(type="submit") Logout 
-    
+div.w-100.h-100
+  .topbar.topbar-sm
+    label.navToggle(for="navToggle")
+      i.material-icons.navToggleIcon menu
+    img.logo(src="/images/logo.svg")
+    .btnContainer.flex
+      form(action="/logout", method="post")
+        csrf-input
+        button.btn.btn-default.btn-simple(type="submit") Logout 
+  main.mainContent.px-l
+    block content

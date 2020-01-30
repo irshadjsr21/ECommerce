@@ -175,12 +175,25 @@ body {
 .text-mute {
   opacity: 0.8;
 }
+
+/*
+  ========= Display classes =========
+*/
+
+.d-none {
+  display: none;
+}
+
 /*
   ========= Width and height =========
 */
 
 .w-100 {
   width: 100%;
+}
+
+.h-100 {
+  height: 100%;
 }
 
 /*

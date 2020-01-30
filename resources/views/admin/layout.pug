@@ -3,11 +3,12 @@ html
   head
     title= title
     meta(content="width=device-width, initial-scale=1", name="viewport")
-    link(rel='stylesheet', href='/css/main.css')
+    link(rel='stylesheet', href='/css/admin.css')
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
     meta(name="csrf-token", content=csrfToken)
   body
     #app
-      include ./includes/topbar.pug
-      block content
+      .flex.w-100.h-100
+        include ./includes/navbar.pug
+        include ./includes/topbar.pug
   script(src="/js/bundle.js")
