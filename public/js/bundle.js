@@ -1,6 +1,50 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".bundle.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +70,67 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
+/******/
+/******/ 				// start chunk loading
+/******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
+/******/
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.src = jsonpScriptSrc(chunkId);
+/******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
+/******/ 				onScriptComplete = function (event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				document.head.appendChild(script);
+/******/ 			}
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -79,6 +184,16 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = "./resources/js/main.js");
@@ -129,7 +244,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _val
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: ['type', 'label', 'error', 'name', 'value'],\n  data: function data() {\n    return {};\n  },\n  methods: {\n    handleInput: function handleInput(event) {\n      this.$emit('input', event.target.value);\n    }\n  }\n});\n\n//# sourceURL=webpack:///./resources/js/components/InputBox.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: ['type', 'label', 'error', 'name', 'value', 'hint'],\n  data: function data() {\n    return {};\n  },\n  methods: {\n    handleInput: function handleInput(event) {\n      this.$emit('input', event.target.value);\n    }\n  }\n});\n\n//# sourceURL=webpack:///./resources/js/components/InputBox.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RadioInput.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RadioInput.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: ['label', 'error', 'name', 'value', 'options', 'hint'],\n  data: function data() {\n    return {};\n  },\n  methods: {\n    handleInput: function handleInput(event) {\n      this.$emit('input', event.target.value);\n    }\n  }\n});\n\n//# sourceURL=webpack:///./resources/js/components/RadioInput.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -142,6 +269,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n/
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  data: function data() {\n    return {\n      placeHolder: 'Start searching...'\n    };\n  },\n  methods: {\n    focusChange: function focusChange(isFocused) {\n      if (isFocused) this.placeHolder = '';else this.placeHolder = 'Start searching...';\n    }\n  }\n});\n\n//# sourceURL=webpack:///./resources/js/components/SearchBar.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectBox.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SelectBox.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: ['label', 'error', 'name', 'value', 'options'],\n  data: function data() {\n    return {};\n  },\n  methods: {\n    handleInput: function handleInput(event) {\n      this.$emit('input', event.target.value);\n    }\n  }\n});\n\n//# sourceURL=webpack:///./resources/js/components/SelectBox.vue?./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -222,7 +361,19 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"input-container mb-l\" }, [\n    _c(\"label\", { staticClass: \"input-label\", attrs: { for: _vm.name } }, [\n      _vm._v(_vm._s(_vm.label))\n    ]),\n    _vm._v(\" \"),\n    _c(\"input\", {\n      staticClass: \"input-box\",\n      class: { \"input-box-invalid\": _vm.error },\n      attrs: { id: _vm.name, type: _vm.type, name: _vm.name },\n      domProps: { value: _vm.value },\n      on: { input: _vm.handleInput }\n    }),\n    _vm._v(\" \"),\n    _vm.error\n      ? _c(\"small\", { staticClass: \"text-danger\" }, [_vm._v(_vm._s(_vm.error))])\n      : _vm._e()\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./resources/js/components/InputBox.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"input-container mb-l\" }, [\n    _c(\"label\", { staticClass: \"input-label\", attrs: { for: _vm.name } }, [\n      _vm._v(_vm._s(_vm.label))\n    ]),\n    _vm._v(\" \"),\n    _vm.hint\n      ? _c(\"small\", { staticClass: \"mt-2 text-mute\" }, [\n          _vm._v(_vm._s(_vm.hint))\n        ])\n      : _vm._e(),\n    _vm._v(\" \"),\n    _c(\"input\", {\n      staticClass: \"input-box\",\n      class: { \"input-box-invalid\": _vm.error },\n      attrs: { id: _vm.name, type: _vm.type, name: _vm.name },\n      domProps: { value: _vm.value },\n      on: { input: _vm.handleInput }\n    }),\n    _vm._v(\" \"),\n    _vm.error\n      ? _c(\"small\", { staticClass: \"text-danger\" }, [_vm._v(_vm._s(_vm.error))])\n      : _vm._e()\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./resources/js/components/InputBox.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"input-container mb-l\" }, [\n    _c(\"div\", { staticClass: \"mb-8\" }, [\n      _c(\"div\", { staticClass: \"input-label\" }, [_vm._v(_vm._s(_vm.label))]),\n      _vm._v(\" \"),\n      _vm.hint\n        ? _c(\"small\", { staticClass: \"mt-2 text-mute\" }, [\n            _vm._v(_vm._s(_vm.hint))\n          ])\n        : _vm._e()\n    ]),\n    _vm._v(\" \"),\n    _c(\n      \"div\",\n      { staticClass: \"flex\" },\n      _vm._l(_vm.options, function(option) {\n        return _c(\n          \"div\",\n          { key: option.value, staticClass: \"flex align-items-center mr-xl\" },\n          [\n            _c(\n              \"label\",\n              { staticClass: \"input-label\", attrs: { for: option.name } },\n              [_vm._v(_vm._s(option.name))]\n            ),\n            _vm._v(\" \"),\n            _c(\"input\", {\n              attrs: { id: option.name, type: \"radio\", name: _vm.name },\n              domProps: {\n                value: option.value,\n                checked: option.value == _vm.value\n              },\n              on: { input: _vm.handleInput }\n            })\n          ]\n        )\n      }),\n      0\n    ),\n    _vm._v(\" \"),\n    _vm.error\n      ? _c(\"small\", { staticClass: \"text-danger\" }, [_vm._v(_vm._s(_vm.error))])\n      : _vm._e()\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./resources/js/components/RadioInput.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -235,6 +386,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"form\",\n    { staticClass: \"searchBar\", attrs: { method: \"get\", action: \"/search\" } },\n    [\n      _c(\"input\", {\n        staticClass: \"searchInput\",\n        attrs: { type: \"text\", name: \"search\", placeholder: _vm.placeHolder },\n        on: {\n          focus: function($event) {\n            return _vm.focusChange(true)\n          },\n          blur: function($event) {\n            return _vm.focusChange(false)\n          }\n        }\n      }),\n      _vm._v(\" \"),\n      _vm._m(0)\n    ]\n  )\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\n      \"button\",\n      { staticClass: \"searchIcon\", attrs: { type: \"submit\" } },\n      [_c(\"i\", { staticClass: \"material-icons\" }, [_vm._v(\"search\")])]\n    )\n  }\n]\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./resources/js/components/SearchBar.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"input-container mb-l\" }, [\n    _c(\"label\", { staticClass: \"input-label\", attrs: { for: _vm.name } }, [\n      _vm._v(_vm._s(_vm.label))\n    ]),\n    _vm._v(\" \"),\n    _c(\n      \"select\",\n      {\n        staticClass: \"input-box\",\n        class: { \"input-box-invalid\": _vm.error },\n        attrs: { id: _vm.name, name: _vm.name },\n        domProps: { value: _vm.value },\n        on: { input: _vm.handleInput }\n      },\n      _vm._l(_vm.options, function(option) {\n        return _c(\n          \"option\",\n          { key: option.value, domProps: { value: option.value } },\n          [_vm._v(_vm._s(option.name))]\n        )\n      }),\n      0\n    ),\n    _vm._v(\" \"),\n    _vm.error\n      ? _c(\"small\", { staticClass: \"text-danger\" }, [_vm._v(_vm._s(_vm.error))])\n      : _vm._e()\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./resources/js/components/SelectBox.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
 
 /***/ }),
 
@@ -405,6 +568,42 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
+/***/ "./resources/js/components/RadioInput.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/RadioInput.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RadioInput.vue?vue&type=template&id=5c4565ba& */ \"./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba&\");\n/* harmony import */ var _RadioInput_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RadioInput.vue?vue&type=script&lang=js& */ \"./resources/js/components/RadioInput.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _RadioInput_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"resources/js/components/RadioInput.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./resources/js/components/RadioInput.vue?");
+
+/***/ }),
+
+/***/ "./resources/js/components/RadioInput.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/RadioInput.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_RadioInput_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib!../../../node_modules/vue-loader/lib??vue-loader-options!./RadioInput.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RadioInput.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_RadioInput_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./resources/js/components/RadioInput.vue?");
+
+/***/ }),
+
+/***/ "./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RadioInput.vue?vue&type=template&id=5c4565ba& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RadioInput.vue?vue&type=template&id=5c4565ba&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RadioInput_vue_vue_type_template_id_5c4565ba___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./resources/js/components/RadioInput.vue?");
+
+/***/ }),
+
 /***/ "./resources/js/components/SearchBar.vue":
 /*!***********************************************!*\
   !*** ./resources/js/components/SearchBar.vue ***!
@@ -441,6 +640,42 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
+/***/ "./resources/js/components/SelectBox.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/SelectBox.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectBox.vue?vue&type=template&id=5d2959d4& */ \"./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4&\");\n/* harmony import */ var _SelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectBox.vue?vue&type=script&lang=js& */ \"./resources/js/components/SelectBox.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _SelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"resources/js/components/SelectBox.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./resources/js/components/SelectBox.vue?");
+
+/***/ }),
+
+/***/ "./resources/js/components/SelectBox.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/SelectBox.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib!../../../node_modules/vue-loader/lib??vue-loader-options!./SelectBox.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectBox.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./resources/js/components/SelectBox.vue?");
+
+/***/ }),
+
+/***/ "./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SelectBox.vue?vue&type=template&id=5d2959d4& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectBox.vue?vue&type=template&id=5d2959d4&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectBox_vue_vue_type_template_id_5d2959d4___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./resources/js/components/SelectBox.vue?");
+
+/***/ }),
+
 /***/ "./resources/js/main.js":
 /*!******************************!*\
   !*** ./resources/js/main.js ***!
@@ -449,7 +684,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _auth_SignupForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth/SignupForm */ \"./resources/js/auth/SignupForm.vue\");\n/* harmony import */ var _auth_LoginForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth/LoginForm */ \"./resources/js/auth/LoginForm.vue\");\n/* harmony import */ var _components_CsrfInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/CsrfInput */ \"./resources/js/components/CsrfInput.vue\");\n/* harmony import */ var _components_SearchBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/SearchBar */ \"./resources/js/components/SearchBar.vue\");\n/* harmony import */ var _components_InputBox__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/InputBox */ \"./resources/js/components/InputBox.vue\");\n\n\n\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('csrfInput', _components_CsrfInput__WEBPACK_IMPORTED_MODULE_3__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('signupForm', _auth_SignupForm__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('loginForm', _auth_LoginForm__WEBPACK_IMPORTED_MODULE_2__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('searchBar', _components_SearchBar__WEBPACK_IMPORTED_MODULE_4__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('inputBox', _components_InputBox__WEBPACK_IMPORTED_MODULE_5__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mixin({\n  methods: {\n    csrfToken: function csrfToken() {\n      var elem = document.querySelector('meta[name=\"csrf-token\"]');\n\n      if (!elem) {\n        console.error('CSRF token not found.');\n        return '';\n      }\n\n      return elem.getAttribute('content');\n    }\n  }\n});\nvar app = new vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n  el: '#app'\n});\n\n//# sourceURL=webpack:///./resources/js/main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _auth_SignupForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth/SignupForm */ \"./resources/js/auth/SignupForm.vue\");\n/* harmony import */ var _auth_LoginForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth/LoginForm */ \"./resources/js/auth/LoginForm.vue\");\n/* harmony import */ var _components_CsrfInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/CsrfInput */ \"./resources/js/components/CsrfInput.vue\");\n/* harmony import */ var _components_SearchBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/SearchBar */ \"./resources/js/components/SearchBar.vue\");\n/* harmony import */ var _components_InputBox__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/InputBox */ \"./resources/js/components/InputBox.vue\");\n/* harmony import */ var _components_SelectBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/SelectBox */ \"./resources/js/components/SelectBox.vue\");\n/* harmony import */ var _components_RadioInput__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/RadioInput */ \"./resources/js/components/RadioInput.vue\");\n\n\n\n\n\n\n\n\n\nvar AddCategory = function AddCategory() {\n  return __webpack_require__.e(/*! import() | admin */ \"admin\").then(__webpack_require__.bind(null, /*! ./admin/category/AddCategory */ \"./resources/js/admin/category/AddCategory.vue\"));\n};\n\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('csrfInput', _components_CsrfInput__WEBPACK_IMPORTED_MODULE_3__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('signupForm', _auth_SignupForm__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('loginForm', _auth_LoginForm__WEBPACK_IMPORTED_MODULE_2__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('searchBar', _components_SearchBar__WEBPACK_IMPORTED_MODULE_4__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('inputBox', _components_InputBox__WEBPACK_IMPORTED_MODULE_5__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('selectBox', _components_SelectBox__WEBPACK_IMPORTED_MODULE_6__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('radioInput', _components_RadioInput__WEBPACK_IMPORTED_MODULE_7__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('addCategoryForm', AddCategory);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].mixin({\n  methods: {\n    csrfToken: function csrfToken() {\n      var elem = document.querySelector('meta[name=\"csrf-token\"]');\n\n      if (!elem) {\n        console.error('CSRF token not found.');\n        return '';\n      }\n\n      return elem.getAttribute('content');\n    }\n  }\n});\nvar app = new vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n  el: '#app'\n});\n\n//# sourceURL=webpack:///./resources/js/main.js?");
 
 /***/ }),
 
@@ -473,7 +708,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _hap
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return validate; });\nfunction validate(schema, object) {\n  var errors = schema.validate(object, {\n    abortEarly: false\n  });\n\n  if (!(errors && errors.error && errors.error.details && errors.error.details.length > 0)) {\n    return {};\n  }\n\n  var errorDetails = errors.error.details;\n  var formattedError = {};\n  var _iteratorNormalCompletion = true;\n  var _didIteratorError = false;\n  var _iteratorError = undefined;\n\n  try {\n    for (var _iterator = errorDetails[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {\n      var detail = _step.value;\n\n      if (detail.message && detail.path && detail.path.length > 0 && !formattedError[detail.path]) {\n        formattedError[detail.path] = detail.message;\n      }\n    }\n  } catch (err) {\n    _didIteratorError = true;\n    _iteratorError = err;\n  } finally {\n    try {\n      if (!_iteratorNormalCompletion && _iterator[\"return\"] != null) {\n        _iterator[\"return\"]();\n      }\n    } finally {\n      if (_didIteratorError) {\n        throw _iteratorError;\n      }\n    }\n  }\n\n  return formattedError;\n}\n\n//# sourceURL=webpack:///./resources/js/validators/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return validate; });\nfunction validate(schema, object) {\n  var errors = schema.validate(object, {\n    abortEarly: false\n  });\n  console.log(errors);\n\n  if (!(errors && errors.error && errors.error.details && errors.error.details.length > 0)) {\n    return {};\n  }\n\n  var errorDetails = errors.error.details;\n  var formattedError = {};\n  var _iteratorNormalCompletion = true;\n  var _didIteratorError = false;\n  var _iteratorError = undefined;\n\n  try {\n    for (var _iterator = errorDetails[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {\n      var detail = _step.value;\n\n      if (detail.message && detail.path && detail.path.length > 0 && !formattedError[detail.path]) {\n        formattedError[detail.path] = detail.message;\n      }\n    }\n  } catch (err) {\n    _didIteratorError = true;\n    _iteratorError = err;\n  } finally {\n    try {\n      if (!_iteratorNormalCompletion && _iterator[\"return\"] != null) {\n        _iterator[\"return\"]();\n      }\n    } finally {\n      if (_didIteratorError) {\n        throw _iteratorError;\n      }\n    }\n  }\n\n  return formattedError;\n}\n\n//# sourceURL=webpack:///./resources/js/validators/index.js?");
 
 /***/ }),
 

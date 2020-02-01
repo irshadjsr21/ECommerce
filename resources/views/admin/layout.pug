@@ -11,4 +11,7 @@ html
       .flex.w-100.h-100
         include ./includes/navbar.pug
         include ./includes/topbar.pug
+  script.
+    window.adminPath = '#{adminPath}';
+  script(src="/js/admin.bundle.js")
   script(src="/js/bundle.js")

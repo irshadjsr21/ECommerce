@@ -35,7 +35,7 @@ body {
   ========= Button Classes =========
 */
 .btn {
-  padding: 10px 15px;
+  padding: 8px 12px;
   border-radius: 2px;
   outline: none;
   border: none;
@@ -49,7 +49,11 @@ body {
   box-shadow: none; }
 
 .btn.btn-lg {
+  padding: 10px 15px;
   font-size: 1.2rem; }
+
+.btn.btn-sm {
+  padding: 6px 8px; }
 
 .btn-default {
   background-color: #ffffff;
@@ -64,6 +68,26 @@ body {
     padding: 8px 12px; } }
 
 /*
+  ========= Card Classes =========
+*/
+.card {
+  background-color: #ffffff;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17); }
+  .card .card-header {
+    padding: 15px;
+    font-size: 1.2rem;
+    background-color: #d9d9d9;
+    font-weight: 500; }
+  .card .card-body {
+    padding: 15px; }
+
+.card-medium {
+  max-width: 800px; }
+
+.card-full {
+  width: 100%; }
+
+/*
   ========= Anchor Classes =========
 */
 .anchor-reset {
@@ -72,25 +96,32 @@ body {
   .anchor-reset:active {
     color: initial;
     text-decoration: none; }
+  .anchor-reset:hover {
+    text-decoration: underline; }
 
 /*
   ========= Form Classes =========
 */
-.input-container .input-label {
-  font-size: 1rem; }
-
-.input-container .input-box {
-  width: 100%;
-  border-radius: 2px;
-  padding: 10px;
-  font-size: 1.1rem;
-  border: none;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
-  margin: 0.3rem 0; }
-  .input-container .input-box:focus {
-    outline-color: #2f6dca; }
-  .input-container .input-box.input-box-invalid {
-    outline: 1px solid #e93f3f; }
+.input-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px; }
+  .input-container .input-label {
+    font-size: 1rem; }
+  .input-container .input-box {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
+    margin: 0.3rem 0;
+    background-color: #ffffff; }
+    .input-container .input-box:focus {
+      outline-color: #2f6dca; }
+    .input-container .input-box.input-box-invalid {
+      outline: 1px solid #e93f3f; }
 
 @media (max-width: 425px) {
   .input-container .input-box {
@@ -147,6 +178,9 @@ body {
 .text-mute {
   opacity: 0.8; }
 
+.text-default {
+  color: #383838; }
+
 /*
   ========= Display classes =========
 */
@@ -165,6 +199,29 @@ body {
 /*
   ========= Margin and paddings =========
 */
+.m-auto {
+  margin: auto; }
+
+.ml-auto {
+  margin-left: auto; }
+
+.mr-auto {
+  margin-right: auto; }
+
+.mb-auto {
+  margin-bottom: auto; }
+
+.mt-auto {
+  margin-top: auto; }
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto; }
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto; }
+
 .m-0 {
   margin: 0rem; }
 
@@ -394,6 +451,29 @@ body {
 .mx-xl {
   margin-left: 1.5625rem;
   margin-right: 1.5625rem; }
+
+.p-auto {
+  padding: auto; }
+
+.pl-auto {
+  padding-left: auto; }
+
+.pr-auto {
+  padding-right: auto; }
+
+.pb-auto {
+  padding-bottom: auto; }
+
+.pt-auto {
+  padding-top: auto; }
+
+.py-auto {
+  padding-top: auto;
+  padding-bottom: auto; }
+
+.px-auto {
+  padding-left: auto;
+  padding-right: auto; }
 
 .p-0 {
   padding: 0rem; }

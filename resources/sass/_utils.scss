@@ -30,7 +30,7 @@ body {
 */
 
 .btn {
-  padding: 10px 15px;
+  padding: 8px 12px;
   border-radius: 2px;
   outline: none;
   border: none;
@@ -46,7 +46,12 @@ body {
 }
 
 .btn.btn-lg {
+  padding: 10px 15px;
   font-size: 1.2rem;
+}
+
+.btn.btn-sm {
+  padding: 6px 8px;
 }
 
 @each $key, $value in $btn-types-color {
@@ -63,6 +68,34 @@ body {
 }
 
 /*
+  ========= Card Classes =========
+*/
+
+.card {
+  background-color: $brand-counter-color;
+  box-shadow: $card-shadow;
+
+  .card-header {
+    padding: 15px;
+    font-size: 1.2rem;
+    background-color: $grey-darker-color;
+    font-weight: 500;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+}
+
+.card-medium {
+  max-width: 800px;
+}
+
+.card-full {
+  width: 100%;
+}
+
+/*
   ========= Anchor Classes =========
 */
 
@@ -74,6 +107,10 @@ body {
     color: initial;
     text-decoration: none;
   }
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 /*
@@ -81,18 +118,24 @@ body {
 */
 
 .input-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+
   .input-label {
     font-size: 1rem;
   }
 
   .input-box {
     width: 100%;
+    max-width: 600px;
     border-radius: 2px;
     padding: 10px;
     font-size: 1.1rem;
     border: none;
     box-shadow: $input-shadow;
     margin: 0.3rem 0;
+    background-color: $brand-counter-color;
 
     &:focus {
       outline-color: $brand-color;
@@ -178,6 +221,10 @@ body {
 
 .text-mute {
   opacity: 0.8;
+}
+
+.text-default {
+  color: $text-color;
 }
 
 /*

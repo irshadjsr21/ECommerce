@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'RESTRICT'
       },
       level: { type: DataTypes.TINYINT, allowNull: false },
-      canHaveDivisions: { type: DataTypes.BOOLEAN, allowNull: false }
+      canHaveDivisions: { type: DataTypes.BOOLEAN, allowNull: false },
+      slug: { type: DataTypes.STRING, allowNull: false }
     },
     {}
   );

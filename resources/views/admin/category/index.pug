@@ -1,4 +1,8 @@
 extends ../layout
 
 block content
-  h1.text-medium Categories
+  .flex.align-items-center
+    h1.text-medium.mr-xl Categories
+    a(href=adminPath+"/categories/new").btn.btn-primary.btn-sm.flex.align-items-center
+      i.material-icons add
+      span New

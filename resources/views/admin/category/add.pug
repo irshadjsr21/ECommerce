@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  .flex.flex-column.mb-xl
+    h1.text-medium.mr-xl.mb-8 Categories
+    small.flex.align-items-center
+      a.anchor-reset.mr-4(href=adminPath+"/categories") Categories
+      span.mr-4 &gt
+      a.anchor-reset.mr-4(href=adminPath+"/categories/new") New
+  if(success)
+    .text-center.mb-s #{success}
+  add-category-form(old-inputs=oldInputs, server-error=errors, categories=categories)
