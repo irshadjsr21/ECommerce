@@ -8,9 +8,11 @@ html
     meta(name="csrf-token", content=csrfToken)
   body
     #app
-      .flex.w-100.h-100
-        include ./includes/navbar.pug
+      include ./includes/navbar.pug
+      .adminNavMargin
         include ./includes/topbar.pug
+        main.px-l
+          block content
   script.
     window.adminPath = '#{adminPath}';
   script(src="/js/vendors~admin.bundle.js")

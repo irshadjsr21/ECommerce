@@ -864,7 +864,10 @@ body {
   background-color: #383838;
   color: #ffffff;
   height: 100vh;
-  transition: width 0.3s; }
+  transition: width 0.3s;
+  position: fixed;
+  top: 0;
+  left: 0; }
   .adminNav .navToggle {
     display: flex;
     flex-direction: row-reverse; }
@@ -897,15 +900,23 @@ body {
   #navToggle:checked ~ .adminNav .navContent .linksContainer .link .linkText {
     display: none; }
 
+.adminNavMargin {
+  margin-left: 300px;
+  transition: margin 0.3s; }
+
+#navToggle:checked ~ .adminNavMargin {
+  margin-left: 70px; }
+
 @media (max-width: 768px) {
   .adminNav {
     width: 200px;
-    position: fixed;
-    top: 0;
-    left: 0;
     transition: transform 0.3s;
     transform: translateX(-100%);
     z-index: 100; }
+  .adminNavMargin {
+    margin-left: 0; }
+  #navToggle:checked ~ .adminNavMargin {
+    margin-left: 0; }
   #navToggle:checked ~ .adminNav {
     width: 200px;
     transform: translateX(0); }
