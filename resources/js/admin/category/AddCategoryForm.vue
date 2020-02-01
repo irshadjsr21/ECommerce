@@ -71,8 +71,13 @@ import schema from '../validators/category';
 import validate from '../../validators';
 import http from '../../http';
 
+import InputBox from '../../components/InputBox';
+import SelectBox from '../../components/SelectBox';
+import RadioInput from '../../components/RadioInput';
+
 export default {
   props: [],
+  components: { InputBox, SelectBox, RadioInput },
   data() {
     return {
       dafaultValues: {

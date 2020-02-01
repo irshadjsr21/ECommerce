@@ -15,6 +15,6 @@ html
           block content
   script.
     window.adminPath = '#{adminPath}';
-  script(src="/js/vendors~admin.bundle.js")
-  script(src="/js/admin.bundle.js")
-  script(src="/js/bundle.js")
+  block preScript
+  script(src="/js/main.bundle.js")
+  block postScript

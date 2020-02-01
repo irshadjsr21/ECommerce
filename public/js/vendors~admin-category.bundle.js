@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vendors~admin"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vendors~admin-category"],{
 
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\

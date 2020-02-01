@@ -6,5 +6,5 @@
       img.logo(src="/images/logo.svg")
   .btnContainer.flex
     form(action="/logout", method="post")
-      csrf-input
+      include ../../includes/csrfInput.pug
       button.btn.btn-default.btn-simple(type="submit") Logout 

@@ -29,9 +29,17 @@
       v-model="values.password"
     />
     <csrf-input />
-    <small class="text-danger" v-if="errors && errors.default">{{ errors.default }}</small>
+    <small class="text-danger" v-if="errors && errors.default">{{
+      errors.default
+    }}</small>
     <div class="flex justify-content-center mt-xl">
-      <button type="submit" class="btn btn-primary btn-lg" @click.prevent="submit">Signup</button>
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+        @click.prevent="submit"
+      >
+        Signup
+      </button>
     </div>
   </form>
 </template>
@@ -40,8 +48,12 @@
 import schema from '../validators/signup';
 import validate from '../validators';
 
+import InputBox from '../components/InputBox';
+import CsrfInput from '../components/CsrfInput';
+
 export default {
   props: ['oldInputs', 'serverError'],
+  components: { InputBox, CsrfInput },
   data() {
     return {
       values: {

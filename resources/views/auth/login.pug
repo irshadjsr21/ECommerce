@@ -9,3 +9,6 @@ block content
       login-form(old-inputs=oldInputs, server-error=errors, for-admin=forAdmin? 'true' : false, admin-path=adminPath)
       .flex.justify-content-center
         a.anchor-reset.text-primary.text-center(href="/signup") Haven’t registered yet? Create an account.
+
+block preScript
+  script(src="/js/user-login.bundle.js")

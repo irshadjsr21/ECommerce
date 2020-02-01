@@ -48,8 +48,12 @@ import loginSchema from '../validators/login';
 import adminLoginSchema from '../validators/adminLogin';
 import validate from '../validators';
 
+import InputBox from '../components/InputBox';
+import CsrfInput from '../components/CsrfInput';
+
 export default {
   props: ['oldInputs', 'serverError', 'forAdmin', 'adminPath'],
+  components: { InputBox, CsrfInput },
   data() {
     return {
       values: {
