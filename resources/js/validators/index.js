@@ -1,6 +1,5 @@
 export default function validate(schema, object) {
   const errors = schema.validate(object, { abortEarly: false });
-  console.log(errors);
   if (
     !(
       errors &&

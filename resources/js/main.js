@@ -1,5 +1,6 @@
 import Vue from 'vue';
 
+import csrfToken from './csrfToken';
 import SignupForm from './auth/SignupForm';
 import LoginForm from './auth/LoginForm';
 import CsrfInput from './components/CsrfInput';
@@ -9,6 +10,8 @@ import SelectBox from './components/SelectBox';
 import RadioInput from './components/RadioInput';
 const AddCategory = () =>
   import(/* webpackChunkName: "admin" */ './admin/category/AddCategory');
+const CategoryHome = () =>
+  import(/* webpackChunkName: "admin" */ './admin/category/Home');
 
 Vue.component('csrfInput', CsrfInput);
 Vue.component('signupForm', SignupForm);
@@ -18,19 +21,7 @@ Vue.component('inputBox', InputBox);
 Vue.component('selectBox', SelectBox);
 Vue.component('radioInput', RadioInput);
 Vue.component('addCategoryForm', AddCategory);
-
-Vue.mixin({
-  methods: {
-    csrfToken: () => {
-      const elem = document.querySelector('meta[name="csrf-token"]');
-      if (!elem) {
-        console.error('CSRF token not found.');
-        return '';
-      }
-      return elem.getAttribute('content');
-    }
-  }
-});
+Vue.component('categoryHome', CategoryHome);
 
 const app = new Vue({
   el: '#app'

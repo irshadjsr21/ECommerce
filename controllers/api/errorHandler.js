@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const route = require('../route');
 
 module.exports = {
@@ -6,7 +7,16 @@ module.exports = {
   }),
 
   error: async (error, req, res, next) => {
-    console.log(error);
-    res.status(500).json('Server Error');
+    if (error instanceof createError.HttpError) {
+      const obj = {
+        message: error.message
+      };
+      if (error.errors) {
+        obj.errors = error.errors;
+      }
+      res.status(error.status).json(obj);
+    } else {
+      res.status(500).json({ message: 'Server error.' });
+    }
   }
 };
