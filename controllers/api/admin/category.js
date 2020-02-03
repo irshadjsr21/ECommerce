@@ -67,15 +67,16 @@ module.exports = {
     page = page ? parseInt(page) : 1;
     itemsPerPage = itemsPerPage ? parseInt(itemsPerPage) : 10;
     const query = {};
+    console.log(page);
 
     if (level) query.level = level;
     if (parent) query.parentCategoryId = parent;
 
     const categories = await Category.findAll({
       where: query,
-      skip: (page - 1) * itemsPerPage,
-      limit: itemsPerPage,
-      order: [['createdAt', 'ASC']]
+      order: [['createdAt', 'ASC']],
+      offset: (page - 1) * itemsPerPage,
+      limit: itemsPerPage
     });
 
     const totalCategories = await Category.count({ where: query });
