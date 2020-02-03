@@ -19,6 +19,10 @@ body {
   background-color: $bg-color;
 }
 
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 14px;
@@ -58,6 +62,21 @@ body {
   padding: 6px 8px;
 }
 
+.btn-reset {
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.btn-icon {
+  color: lighten($color: $text-color, $amount: 40);
+
+  &:hover {
+    color: $text-color;
+  }
+}
+
 @each $key, $value in $btn-types-color {
   .btn-#{$key} {
     background-color: map-get($map: $value, $key: 'background');
@@ -84,6 +103,7 @@ body {
     font-size: 1.2rem;
     background-color: $grey-darker-color;
     font-weight: 500;
+    margin: 0;
   }
 
   .card-body {
@@ -97,6 +117,110 @@ body {
 
 .card-full {
   width: 100%;
+}
+
+/*
+  ========= Table Classes =========
+*/
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+  border: 1px solid $grey-darker-color;
+  min-width: 500px;
+  border-radius: 5px;
+
+  thead {
+    background-color: $text-color;
+    color: $brand-counter-color;
+    th {
+      font-weight: 500;
+      text-align: left;
+
+      button {
+        font-weight: 500;
+        font-size: 1rem;
+        color: $brand-counter-color;
+      }
+
+      &:first-child {
+        border-top-left-radius: 5px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 5px;
+      }
+    }
+  }
+
+  th:first-child,
+  td:first-child {
+    padding-left: 20px;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 20px;
+  }
+
+  td,
+  th {
+    padding: 15px;
+    min-width: 100px;
+  }
+
+  &.table-striped {
+    tr:nth-child(odd) {
+      background-color: $off-white-color;
+    }
+  }
+
+  &.table-clickable {
+    tr {
+      cursor: pointer;
+    }
+    tr:hover {
+      background-color: $off-white-color;
+    }
+  }
+
+  &.table-sortable {
+    th {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .table {
+    td,
+    th {
+      padding: 8px;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: 15px;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 15px;
+    }
+
+    td,
+    th {
+      padding: 5px;
+    }
+  }
 }
 
 /*
@@ -260,6 +384,15 @@ body {
       width: 150px;
       height: 150px;
       border-width: 8px;
+    }
+  }
+
+  &.loader-page {
+    margin: 100px 0;
+    &::after {
+      width: 180px;
+      height: 180px;
+      border-width: 10px;
     }
   }
 }

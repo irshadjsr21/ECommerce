@@ -58,5 +58,33 @@ module.exports = {
       where: { canHaveDivisions: true }
     });
     res.json({ categories });
+  }),
+
+  list: route(async (req, res) => {
+    let { page, itemsPerPage } = req.query;
+    const { level, parent } = req.query;
+
+    page = page ? parseInt(page) : 1;
+    itemsPerPage = itemsPerPage ? parseInt(itemsPerPage) : 10;
+    const query = {};
+
+    if (level) query.level = level;
+    if (parent) query.parentCategoryId = parent;
+
+    const categories = await Category.findAll({
+      where: query,
+      skip: (page - 1) * itemsPerPage,
+      limit: itemsPerPage,
+      order: [['createdAt', 'ASC']]
+    });
+
+    const totalCategories = await Category.count({ where: query });
+
+    res.json({
+      page,
+      itemsPerPage,
+      categories,
+      lastPage: Math.ceil(totalCategories / itemsPerPage)
+    });
   })
 };

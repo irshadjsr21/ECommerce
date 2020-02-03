@@ -2,7 +2,10 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'resources', 'js', 'main.js'),
+  entry: [
+    '@babel/polyfill',
+    path.resolve(__dirname, 'resources', 'js', 'main.js')
+  ],
   output: {
     path: path.resolve(__dirname, 'public', 'js'),
     filename: '[name].bundle.js',

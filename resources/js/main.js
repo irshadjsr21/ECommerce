@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import SearchBar from './components/SearchBar';
+import VueFilterDateFormat from 'vue-filter-date-format';
 
 const SignupForm = () =>
   import(/* webpackChunkName: "user-login" */ './auth/SignupForm');
@@ -10,6 +11,7 @@ const LoginForm = () =>
 const CategoryHome = () =>
   import(/* webpackChunkName: "admin-category" */ './admin/category/Home');
 
+Vue.use(VueFilterDateFormat);
 Vue.component('searchBar', SearchBar);
 Vue.component('signupForm', SignupForm);
 Vue.component('loginForm', LoginForm);

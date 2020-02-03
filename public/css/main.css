@@ -27,6 +27,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: #f9f9f9; }
 
+button {
+  font-family: 'Montserrat', sans-serif; }
+
 @media (max-width: 768px) {
   html {
     font-size: 14px; } }
@@ -57,6 +60,17 @@ body {
 .btn.btn-sm {
   padding: 6px 8px; }
 
+.btn-reset {
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: none; }
+
+.btn-icon {
+  color: #9e9e9e; }
+  .btn-icon:hover {
+    color: #383838; }
+
 .btn-default {
   background-color: #ffffff;
   color: #383838; }
@@ -79,7 +93,8 @@ body {
     padding: 15px;
     font-size: 1.2rem;
     background-color: #d9d9d9;
-    font-weight: 500; }
+    font-weight: 500;
+    margin: 0; }
   .card .card-body {
     padding: 15px; }
 
@@ -88,6 +103,67 @@ body {
 
 .card-full {
   width: 100%; }
+
+/*
+  ========= Table Classes =========
+*/
+.table-container {
+  overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+  border: 1px solid #d9d9d9;
+  min-width: 500px;
+  border-radius: 5px; }
+  .table thead {
+    background-color: #383838;
+    color: #ffffff; }
+    .table thead th {
+      font-weight: 500;
+      text-align: left; }
+      .table thead th button {
+        font-weight: 500;
+        font-size: 1rem;
+        color: #ffffff; }
+      .table thead th:first-child {
+        border-top-left-radius: 5px; }
+      .table thead th:last-child {
+        border-top-right-radius: 5px; }
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: 20px; }
+  .table th:last-child,
+  .table td:last-child {
+    padding-right: 20px; }
+  .table td,
+  .table th {
+    padding: 15px;
+    min-width: 100px; }
+  .table.table-striped tr:nth-child(odd) {
+    background-color: #f2f2f2; }
+  .table.table-clickable tr {
+    cursor: pointer; }
+  .table.table-clickable tr:hover {
+    background-color: #f2f2f2; }
+  .table.table-sortable th {
+    cursor: pointer; }
+
+@media (max-width: 768px) {
+  .table td,
+  .table th {
+    padding: 8px; } }
+
+@media (max-width: 425px) {
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: 15px; }
+  .table th:last-child,
+  .table td:last-child {
+    padding-right: 15px; }
+  .table td,
+  .table th {
+    padding: 5px; } }
 
 /*
   ========= Anchor Classes =========
@@ -208,6 +284,12 @@ body {
     width: 150px;
     height: 150px;
     border-width: 8px; }
+  .loader.loader-page {
+    margin: 100px 0; }
+    .loader.loader-page::after {
+      width: 180px;
+      height: 180px;
+      border-width: 10px; }
 
 @keyframes loaderAnimation {
   0% {

@@ -1,17 +1,14 @@
 <template>
-  <div class="card card-medium m-auto">
-    <div class="card-header">
-      Add Category
-    </div>
+  <div class="card card-medium m-auto aminate">
+    <h2 class="card-header flex justify-content-space-between">
+      <span>Add Category</span>
+      <button class="btn-reset" @click="emitClose">
+        <i class="material-icons">close</i>
+      </button>
+    </h2>
 
     <div class="card-body">
-      <form
-        ref="form"
-        :action="adminPath + '/categories/new'"
-        method="post"
-        class="mb-l"
-        v-if="isInitialized"
-      >
+      <form class="mb-l" v-if="isInitialized">
         <input-box
           class="mx-auto"
           type="text"
@@ -69,7 +66,7 @@
 <script>
 import schema from '../validators/category';
 import validate from '../../validators';
-import http from '../../http';
+import { getCategoryOptions, addCategory } from '../services/category';
 
 import InputBox from '../../components/InputBox';
 import SelectBox from '../../components/SelectBox';
@@ -132,25 +129,18 @@ export default {
     },
 
     getOptions() {
-      http
-        .get('/admin/category/parent-options')
-        .then(res => {
-          if (res && res.data) {
-            const categories = res.data.categories;
-            if (categories) {
-              this.categoryOptions = this.categoryOptions.concat(
-                categories.map(category => {
-                  return { value: category.id, name: category.name };
-                })
-              );
-            }
-          } else {
-            throw new Error('No data');
+      getCategoryOptions()
+        .then(categories => {
+          if (categories) {
+            this.categoryOptions = this.categoryOptions.concat(
+              categories.map(category => {
+                return { value: category.id, name: category.name };
+              })
+            );
           }
         })
         .catch(error => {
           this.errors.default = 'Failed to communicate with server.';
-          console.log(error);
         })
         .finally(() => {
           this.isInitialized = true;
@@ -159,15 +149,11 @@ export default {
 
     submit() {
       if (this.checkForm()) {
-        console.log('Loading');
         this.isLoading = true;
-        http
-          .post('/admin/category', {
-            ...this.values
-          })
-          .then(res => {
-            if (res && res.data && res.data.category) {
-              this.newCategory = res.data.category;
+        addCategory(this.values)
+          .then(category => {
+            if (category) {
+              this.newCategory = category;
               this.values = this.dafaultValues;
             }
           })
@@ -187,6 +173,10 @@ export default {
         .toLowerCase()
         .split(' ')
         .join('-');
+    },
+
+    emitClose() {
+      this.$emit('close', true);
     }
   }
 };
