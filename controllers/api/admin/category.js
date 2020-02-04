@@ -60,6 +60,19 @@ module.exports = {
     res.json({ categories });
   }),
 
+  getLevels: route(async (req, res) => {
+    const levels = await Category.aggregate('level', 'DISTINCT', {
+      plain: false
+    });
+    const distLevels = [];
+    for (const level of levels) {
+      if (level && level.DISTINCT) {
+        distLevels.push(level.DISTINCT);
+      }
+    }
+    res.json({ levels: distLevels.sort() });
+  }),
+
   list: route(async (req, res) => {
     let { page, itemsPerPage } = req.query;
     const { level, parent, sortBy, order, divisions } = req.query;
@@ -69,11 +82,10 @@ module.exports = {
 
     const query = {};
     let orderArr = [['createdAt', 'ASC']];
-    if (level) query.level = level;
+    if (level) query.level = level.split(',');
     if (parent) query.parentCategoryId = parent;
     if (divisions) query.canHaveDivisions = divisions == 'yes' ? true : false;
     if (sortBy) orderArr = [[sortBy, order || 'ASC']];
-
     const categories = await Category.findAll({
       where: query,
       order: orderArr,

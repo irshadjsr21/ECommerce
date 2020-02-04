@@ -44,11 +44,11 @@
                 'filter-options-open': openFilterMenu == 'level'
               }"
             >
-              <input-box
-                class="input-container-digit"
+              <checkbox-input
                 v-model="level.value"
-                label="Enter level"
+                :options="level.options"
                 @input="inputChanged"
+                :optionsCol="true"
               />
               <div class="flex justify-content-center">
                 <button @click="clearFilter('level')" class="btn btn-default">
@@ -135,13 +135,14 @@ import InputBox from '../../components/InputBox';
 import SelectBox from '../../components/SelectBox';
 import RadioInput from '../../components/RadioInput';
 import Modal from '../../components/Modal';
+import { getCategoryLevels } from '../services/category';
 
 export default {
   data() {
     return {
       defaultValues: {
         divisions: null,
-        level: null,
+        level: [],
         sortOrder: 'asc',
         sortBy: null
       },
@@ -192,7 +193,8 @@ export default {
       },
       level: {
         isActive: false,
-        value: null
+        value: [],
+        options: []
       },
       showFilters: false,
       openFilterMenu: null,
@@ -202,6 +204,10 @@ export default {
   },
 
   components: { CheckboxInput, InputBox, SelectBox, RadioInput, Modal },
+
+  mounted() {
+    this.getLevels();
+  },
 
   filters: {
     capitalize: function(value) {
@@ -213,6 +219,19 @@ export default {
   },
 
   methods: {
+    getLevels() {
+      getCategoryLevels().then(data => {
+        if (data && Array.isArray(data)) {
+          this.level.options = data.map(val => {
+            return {
+              name: val,
+              value: val
+            };
+          });
+        }
+      });
+    },
+
     changeFilterMenu(value) {
       if (this.openFilterMenu == value) this.openFilterMenu = null;
       else this.openFilterMenu = value;
@@ -220,7 +239,7 @@ export default {
 
     inputChanged() {
       this.sort.isActive = !!this.sort.sortBy.value;
-      this.level.isActive = !!this.level.value;
+      this.level.isActive = this.level.value.length > 0;
       this.divisions.isActive = !!this.divisions.value;
       this.genQuery();
     },
@@ -233,7 +252,7 @@ export default {
       }
 
       if (this.level.isActive) {
-        query.level = this.level.value;
+        query.level = this.level.value.join(',');
       }
 
       if (this.divisions.isActive) {

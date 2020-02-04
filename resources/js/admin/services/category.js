@@ -19,6 +19,21 @@ export async function getCategoryOptions() {
   });
 }
 
+export async function getCategoryLevels() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await http.get(baseUrl + '/level-options');
+      if (res && res.data) {
+        resolve(res.data.levels);
+      } else {
+        throw new Error('No data');
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export async function addCategory(body) {
   return new Promise(async (resolve, reject) => {
     try {
