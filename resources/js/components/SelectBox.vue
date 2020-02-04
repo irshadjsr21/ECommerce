@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container mb-l">
+  <div class="input-container">
     <label :for="name" class="input-label">{{ label }}</label>
     <select
       :id="name"

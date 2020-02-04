@@ -62,19 +62,21 @@ module.exports = {
 
   list: route(async (req, res) => {
     let { page, itemsPerPage } = req.query;
-    const { level, parent } = req.query;
+    const { level, parent, sortBy, order, divisions } = req.query;
 
     page = page ? parseInt(page) : 1;
     itemsPerPage = itemsPerPage ? parseInt(itemsPerPage) : 10;
-    const query = {};
-    console.log(page);
 
+    const query = {};
+    let orderArr = [['createdAt', 'ASC']];
     if (level) query.level = level;
     if (parent) query.parentCategoryId = parent;
+    if (divisions) query.canHaveDivisions = divisions == 'yes' ? true : false;
+    if (sortBy) orderArr = [[sortBy, order || 'ASC']];
 
     const categories = await Category.findAll({
       where: query,
-      order: [['createdAt', 'ASC']],
+      order: orderArr,
       offset: (page - 1) * itemsPerPage,
       limit: itemsPerPage
     });

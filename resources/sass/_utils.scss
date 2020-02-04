@@ -273,6 +273,26 @@ button {
       outline: 1px solid $danger-color;
     }
   }
+
+  &.input-container-row {
+    flex-direction: row;
+    align-items: center;
+    .input-label {
+      margin-right: 10px;
+    }
+  }
+
+  &.input-container-digit {
+    .input-box {
+      max-width: 50px;
+    }
+  }
+
+  &.input-container-sm {
+    .input-box {
+      max-width: 200px;
+    }
+  }
 }
 
 @media (max-width: 425px) {
@@ -313,6 +333,10 @@ button {
 
 .align-items-center {
   align-items: center;
+}
+
+.align-items-start {
+  align-items: flex-start;
 }
 
 /*

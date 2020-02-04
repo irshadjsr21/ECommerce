@@ -4,11 +4,13 @@
 
     <div class="card-body">
       <div v-if="isInitialized">
+        <category-filters class="mb-s" @change="filterChanged" />
         <custom-table :columns="tableHeaders" :contents="categories">
           <template v-slot:default="slotProps">
             <tr v-for="category of slotProps.contents" v-bind:key="category.id">
               <td>{{ category.name }}</td>
               <td>{{ category.slug }}</td>
+              <td>{{ category.level }}</td>
               <td>{{ category.canHaveDivisions ? 'Yes' : 'No' }}</td>
               <td>
                 {{
@@ -53,6 +55,7 @@
 <script>
 import CustomTable from '../../components/CustomTable';
 import Pagination from '../../components/Pagination';
+import CategoryFilters from './CategoryFilters';
 import { getCategory } from '../services/category';
 
 export default {
@@ -62,6 +65,7 @@ export default {
       error: null,
       isLoading: false,
       isInitialized: false,
+      query: {},
       tableHeaders: [
         {
           name: 'Name',
@@ -72,6 +76,11 @@ export default {
           name: 'Slug',
           isSortable: true,
           key: 'slug'
+        },
+        {
+          name: 'Level',
+          isSortable: true,
+          key: 'level'
         },
         {
           name: 'Can have subcategories?',
@@ -91,10 +100,10 @@ export default {
       lastPage: 1
     };
   },
-  components: { CustomTable, Pagination },
+  components: { CustomTable, Pagination, CategoryFilters },
 
   mounted() {
-    getCategory()
+    getCategory(this.query)
       .then(data => {
         this.categories = data.categories;
         this.lastPage = data.lastPage;
@@ -120,7 +129,11 @@ export default {
     pageChanged(page) {
       this.currentPage = page;
       this.isLoading = true;
-      getCategory({ page: this.currentPage })
+      this.getData();
+    },
+    getData() {
+      this.isLoading = true;
+      getCategory({ ...this.query, page: this.currentPage })
         .then(data => {
           this.categories = data.categories;
           this.lastPage = data.lastPage;
@@ -131,6 +144,11 @@ export default {
         .finally(() => {
           this.isLoading = false;
         });
+    },
+    filterChanged(query) {
+      this.currentPage = 1;
+      this.query = query;
+      this.getData();
     }
   }
 };

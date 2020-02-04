@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Category.associate = function() {
-    Category.belongsTo(Category, { foreignKey: 'parentCategoryId' });
+    Category.hasMany(Category, { foreignKey: 'parentCategoryId' });
   };
 
   Category.beforeCreate(category => {
