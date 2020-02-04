@@ -10,7 +10,7 @@
     <div class="card-body">
       <form class="mb-l" v-if="isInitialized">
         <input-box
-          class="mx-auto"
+          class="mx-auto mb-l"
           type="text"
           label="Name"
           name="name"
@@ -19,7 +19,7 @@
           @input="nameChanged"
         />
         <input-box
-          class="mx-auto"
+          class="mx-auto mb-l"
           type="text"
           label="Slug"
           name="slug"
@@ -28,7 +28,7 @@
           hint="This will be used as the URL path for the category."
         />
         <select-box
-          class="mx-auto"
+          class="mx-auto mb-l"
           label="Parent category"
           name="parentCategoryId"
           v-model="values.parentCategoryId"
@@ -36,7 +36,7 @@
           :options="categoryOptions"
         />
         <radio-input
-          class="mx-auto"
+          class="mx-auto mb-l"
           label="Can it have sub categories?"
           name="canHaveDivisions"
           v-model="values.canHaveDivisions"

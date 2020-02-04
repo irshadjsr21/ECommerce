@@ -6,6 +6,7 @@
     class="mb-l"
   >
     <input-box
+      class="mb-l"
       type="email"
       label="Email"
       name="email"
@@ -13,6 +14,7 @@
       v-model="values.email"
     />
     <input-box
+      class="mb-l"
       type="password"
       label="Password"
       name="password"
@@ -20,6 +22,7 @@
       v-model="values.password"
     />
     <input-box
+      class="mb-l"
       type="password"
       label="Secret"
       name="secret"

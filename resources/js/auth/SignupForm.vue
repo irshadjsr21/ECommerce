@@ -1,6 +1,7 @@
 <template>
   <form ref="form" action="/signup" method="post" class="mb-l">
     <input-box
+      class="mb-l"
       type="text"
       label="First Name"
       name="firstName"
@@ -8,6 +9,7 @@
       v-model="values.firstName"
     />
     <input-box
+      class="mb-l"
       type="text"
       label="Last Name"
       name="lastName"
@@ -15,6 +17,7 @@
       v-model="values.lastName"
     />
     <input-box
+      class="mb-l"
       type="email"
       label="Email"
       name="email"
@@ -22,6 +25,7 @@
       v-model="values.email"
     />
     <input-box
+      class="mb-l"
       type="password"
       label="Password"
       name="password"
