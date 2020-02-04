@@ -9,274 +9,153 @@
       </i>
       <span>Add filters</span>
     </button>
-    <div v-if="querySize > 0" class="mt-s">
+    <div v-if="bubbles.length > 0" class="mt-s">
       <h4 class="mt-0 mb-s text-medium">Active filters</h4>
       <div class="flex flex-wrap">
-        <div class="mr-s mb-8" v-for="(value, keyName) in query" :key="keyName">
+        <div
+          class="mr-s mb-8"
+          v-for="bubble of bubbles"
+          :key="
+            bubble.inElemName
+              ? bubble.name + '-' + bubble.inElemName
+              : bubble.name
+          "
+        >
           <button
             class="filter-bubble flex align-items-center justify-content-center"
-            @click="clearFilter(keyName)"
+            @click="clearFilter(bubble)"
           >
             <small class="mr-4">X</small>
-            <span>{{ keyName | capitalize }} : {{ value | capitalize }}</span>
+            <span>{{ bubble.displayName }} : {{ bubble.value }}</span>
           </button>
         </div>
       </div>
     </div>
-    <modal v-if="showFilters" @close="showFilters = false">
-      <template v-slot:header>
-        <h3>Filters</h3>
-      </template>
-
-      <template v-slot:body>
-        <div class="filter-container">
-          <div class="filter-menu">
-            <button
-              :class="{ 'filter-active': level.isActive }"
-              class="filter-header"
-              @click="changeFilterMenu('level')"
-            >
-              Level
-            </button>
-            <div
-              class="filter-options"
-              :class="{
-                'filter-options-open': openFilterMenu == 'level'
-              }"
-            >
-              <checkbox-input
-                v-model="level.value"
-                :options="level.options"
-                @input="inputChanged"
-                :optionsCol="true"
-              />
-              <div class="flex justify-content-center">
-                <button @click="clearFilter('level')" class="btn btn-default">
-                  Clear
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="filter-menu">
-            <button
-              class="filter-header"
-              :class="{ 'filter-active': divisions.isActive }"
-              @click="changeFilterMenu('divisions')"
-            >
-              Have subcategories?
-            </button>
-            <div
-              class="filter-options"
-              :class="{
-                'filter-options-open': openFilterMenu == 'divisions'
-              }"
-            >
-              <radio-input
-                :optionsCol="true"
-                :options="divisions.options"
-                v-model="divisions.value"
-                @input="inputChanged"
-              />
-              <div class="flex justify-content-center">
-                <button
-                  @click="clearFilter('divisions')"
-                  class="btn btn-default"
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="filter-menu">
-            <button
-              :class="{ 'filter-active': sort.isActive }"
-              class="filter-header"
-              @click="changeFilterMenu('sort')"
-            >
-              Sort by
-            </button>
-            <div
-              class="filter-options"
-              :class="{ 'filter-options-open': openFilterMenu == 'sort' }"
-            >
-              <div class="flex justify-content-space-between">
-                <radio-input
-                  :optionsCol="true"
-                  :options="sort.sortBy.options"
-                  v-model="sort.sortBy.value"
-                  class="mr-l"
-                  @input="inputChanged"
-                />
-                <radio-input
-                  :optionsCol="true"
-                  :options="sort.sortOrder.options"
-                  v-model="sort.sortOrder.value"
-                  @input="inputChanged"
-                />
-              </div>
-              <div class="flex justify-content-center">
-                <button @click="clearFilter('sort')" class="btn btn-default">
-                  Clear
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-    </modal>
+    <admin-filter
+      ref="adminFilter"
+      :defaultValues="defaultFilterValues"
+      v-show="showFilters"
+      @close="showFilters = false"
+      :options="filterOptions"
+      @query="queryChanged"
+      @filters="value => (bubbles = value)"
+    />
   </div>
 </template>
 
 <script>
-import CheckboxInput from '../../components/CheckboxInput';
-import InputBox from '../../components/InputBox';
-import SelectBox from '../../components/SelectBox';
-import RadioInput from '../../components/RadioInput';
-import Modal from '../../components/Modal';
+import AdminFilter from '../../components/AdminFilter';
 import { getCategoryLevels } from '../services/category';
 
 export default {
   data() {
     return {
-      defaultValues: {
-        divisions: null,
-        level: [],
-        sortOrder: 'asc',
-        sortBy: null
-      },
-      sort: {
-        isActive: false,
-        sortBy: {
-          value: null,
+      showFilters: false,
+      bubbles: [],
+      filterOptions: [
+        {
+          name: 'level',
+          label: 'Level',
+          multiple: true,
+          options: []
+        },
+        {
+          name: 'divisions',
+          label: 'Divisions',
+          multiple: false,
           options: [
-            {
-              name: 'Name',
-              value: 'name'
-            },
-            {
-              name: 'Slug',
-              value: 'slug'
-            },
-            {
-              name: 'Level',
-              value: 'level'
-            },
-            {
-              name: 'Created at',
-              value: 'createdAt'
-            }
+            { name: 'Yes', value: 'yes' },
+            { name: 'No', value: 'no' }
           ]
         },
-        sortOrder: {
-          value: 'asc',
-          options: [
+        {
+          name: 'sort',
+          label: 'Sort',
+          hasMany: [
             {
-              name: 'Ascending',
-              value: 'asc'
+              name: 'sortBy',
+              label: 'Sort by',
+              multiple: false,
+              options: [
+                {
+                  name: 'Name',
+                  value: 'name'
+                },
+                {
+                  name: 'Slug',
+                  value: 'slug'
+                },
+                {
+                  name: 'Level',
+                  value: 'level'
+                },
+                {
+                  name: 'Created at',
+                  value: 'createdAt'
+                }
+              ]
             },
             {
-              name: 'Descending',
-              value: 'desc'
+              name: 'order',
+              label: 'Sort order',
+              multiple: false,
+              options: [
+                {
+                  name: 'Ascending',
+                  value: 'asc'
+                },
+                {
+                  name: 'Descending',
+                  value: 'desc'
+                }
+              ]
             }
           ]
         }
-      },
-      divisions: {
-        isActive: false,
-        value: null,
-        options: [
-          { name: 'Yes', value: 'yes' },
-          { name: 'No', value: 'no' }
-        ]
-      },
-      level: {
-        isActive: false,
-        value: [],
-        options: []
-      },
-      showFilters: false,
-      openFilterMenu: null,
-      query: {},
-      querySize: 0
+      ],
+      defaultFilterValues: {
+        level: [],
+        divisions: '',
+        sortBy: '',
+        order: ''
+      }
     };
   },
 
-  components: { CheckboxInput, InputBox, SelectBox, RadioInput, Modal },
+  components: {
+    AdminFilter
+  },
 
   mounted() {
     this.getLevels();
-  },
-
-  filters: {
-    capitalize: function(value) {
-      if (!value) return '';
-      if (typeof value != 'string') return '';
-      value = value.toString();
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    }
   },
 
   methods: {
     getLevels() {
       getCategoryLevels().then(data => {
         if (data && Array.isArray(data)) {
-          this.level.options = data.map(val => {
-            return {
-              name: val,
-              value: val
-            };
+          const index = this.filterOptions.findIndex(obj => {
+            return obj.name == 'level';
           });
+          if (index != -1) {
+            this.filterOptions[index].options = data.map(val => {
+              const strVal = val + '';
+              return {
+                name: strVal,
+                value: strVal
+              };
+            });
+          }
         }
       });
     },
 
-    changeFilterMenu(value) {
-      if (this.openFilterMenu == value) this.openFilterMenu = null;
-      else this.openFilterMenu = value;
+    queryChanged(value) {
+      this.$emit('change', value);
     },
 
-    inputChanged() {
-      this.sort.isActive = !!this.sort.sortBy.value;
-      this.level.isActive = this.level.value.length > 0;
-      this.divisions.isActive = !!this.divisions.value;
-      this.genQuery();
-    },
-
-    genQuery() {
-      const query = {};
-      if (this.sort.isActive) {
-        query.sortBy = this.sort.sortBy.value;
-        query.order = this.sort.sortOrder.value;
-      }
-
-      if (this.level.isActive) {
-        query.level = this.level.value.join(',');
-      }
-
-      if (this.divisions.isActive) {
-        query.divisions = this.divisions.value;
-      }
-
-      this.query = query;
-      this.querySize = Object.keys(query).length;
-      this.$emit('change', query);
-    },
-
-    clearFilter(key) {
-      if (['sort', 'sortBy', 'order'].includes(key)) {
-        this.sort.sortBy.value = this.defaultValues.sortBy;
-        this.sort.sortOrder.value = this.defaultValues.sortOrder;
-        this.sort.isActive = false;
-      } else if (key != 'sort') {
-        if (this[key]) {
-          this[key].isActive = false;
-          this[key].value = this.defaultValues[key];
-        }
-      }
-
-      this.inputChanged();
+    clearFilter(bubble) {
+      this.$refs.adminFilter.clearBubble(bubble);
     }
   }
 };

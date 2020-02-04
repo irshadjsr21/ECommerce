@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container mb-l">
+  <div class="input-container">
     <div v-if="label || hint" class="mb-8">
       <div class="input-label" v-if="label">{{ label }}</div>
       <small v-if="hint" class="mt-2 text-mute">{{ hint }}</small>
