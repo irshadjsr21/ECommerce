@@ -155,22 +155,29 @@ export default {
 
   methods: {
     getLevels() {
-      getCategoryLevels().then(data => {
-        if (data && Array.isArray(data)) {
-          const index = this.filterOptions.findIndex(obj => {
-            return obj.name == 'level';
-          });
-          if (index != -1) {
-            this.filterOptions[index].options = data.map(val => {
-              const strVal = val + '';
-              return {
-                name: strVal,
-                value: strVal
-              };
+      getCategoryLevels()
+        .then(data => {
+          if (data && Array.isArray(data)) {
+            const index = this.filterOptions.findIndex(obj => {
+              return obj.name == 'level';
             });
+            if (index != -1) {
+              this.filterOptions[index].options = data.map(val => {
+                const strVal = val + '';
+                return {
+                  name: strVal,
+                  value: strVal
+                };
+              });
+            }
           }
-        }
-      });
+        })
+        .catch(error => {
+          this.$toasted.show(error.message, {
+            icon: 'error',
+            className: 'toast-error'
+          });
+        });
     },
 
     queryChanged(value) {

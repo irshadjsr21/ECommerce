@@ -91,6 +91,18 @@ button {
 }
 
 /*
+  ========= Toast Classes =========
+*/
+
+.toast-error {
+  background-color: $danger-color !important;
+  color: $brand-counter-color !important;
+  i {
+    color: $brand-counter-color !important;
+  }
+}
+
+/*
   ========= Card Classes =========
 */
 

@@ -25,7 +25,7 @@ export default {
         },
         negative: {
           name: 'No',
-          classes: 'btn-default'
+          classes: 'btn-default btn-simple'
         }
       }
     };

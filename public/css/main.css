@@ -80,12 +80,21 @@ button {
   color: #ffffff; }
 
 .btn-danger {
-  background-color: #e93f3f;
+  background-color: #c52b2b;
   color: #ffffff; }
 
 @media (max-width: 768px) {
   .btn {
     padding: 8px 12px; } }
+
+/*
+  ========= Toast Classes =========
+*/
+.toast-error {
+  background-color: #c52b2b !important;
+  color: #ffffff !important; }
+  .toast-error i {
+    color: #ffffff !important; }
 
 /*
   ========= Card Classes =========
@@ -205,7 +214,7 @@ button {
     .input-container .input-box:focus {
       outline-color: #2f6dca; }
     .input-container .input-box.input-box-invalid {
-      outline: 1px solid #e93f3f; }
+      outline: 1px solid #c52b2b; }
   .input-container.input-container-row {
     flex-direction: row;
     align-items: center; }
@@ -272,7 +281,7 @@ button {
   color: #2f6dca; }
 
 .text-danger {
-  color: #e93f3f; }
+  color: #c52b2b; }
 
 .text-mute {
   opacity: 0.8; }

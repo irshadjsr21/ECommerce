@@ -158,7 +158,10 @@ export default {
               this.preData[id] = data;
             })
             .catch(error => {
-              console.log(error);
+              this.$toasted.show(error.message, {
+                icon: 'error',
+                className: 'toast-error'
+              });
             })
             .finally(() => {
               this.isLoading = false;

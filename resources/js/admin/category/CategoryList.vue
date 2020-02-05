@@ -78,7 +78,6 @@ export default {
   data() {
     return {
       categories: [],
-      error: null,
       isLoading: false,
       isInitialized: false,
       toDeleteCategory: null,
@@ -162,7 +161,10 @@ export default {
           this.lastPage = data.lastPage;
         })
         .catch(error => {
-          this.error = 'Some error occured.';
+          this.$toasted.show(error.message, {
+            icon: 'error',
+            className: 'toast-error'
+          });
         })
         .finally(() => {
           this.isLoading = false;

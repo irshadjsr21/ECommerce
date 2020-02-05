@@ -70,7 +70,10 @@ export default {
           this.refreshTable();
         })
         .catch(error => {
-          console.log(error);
+          this.$toasted.show(error.message, {
+            icon: 'error',
+            className: 'toast-error'
+          });
         });
     },
 
