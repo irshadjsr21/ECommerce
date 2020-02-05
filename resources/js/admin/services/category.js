@@ -50,6 +50,22 @@ export async function addCategory(body) {
   });
 }
 
+export async function updateCategory(id, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await http.patch(baseUrl + '/' + id, body);
+      if (res && res.data) {
+        const category = res.data.category;
+        resolve(category);
+      } else {
+        resolve(null);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export async function getCategories(query) {
   return new Promise(async (resolve, reject) => {
     try {

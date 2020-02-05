@@ -130,7 +130,7 @@ export default {
       this.$emit('view', id);
     },
     editCategory(id) {
-      console.log('Checkout ' + id);
+      this.$emit('edit', id);
     },
     deleteCategory(id) {
       console.log('Checkout ' + id);

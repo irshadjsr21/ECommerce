@@ -1,7 +1,8 @@
 <template>
   <modal @close="$emit('close')">
     <template v-slot:header>
-      <h3>Add Category</h3>
+      <h3 v-if="isEditing">Update Category</h3>
+      <h3 v-else>Add Category</h3>
     </template>
 
     <template v-slot:body>
@@ -50,7 +51,7 @@
               type="submit"
               class="btn btn-primary btn-lg"
               @click.prevent="submit"
-              :disabled="isLoading"
+              :disabled="isLoading || fatalError"
             >
               Submit
             </button>
@@ -65,7 +66,12 @@
 <script>
 import schema from '../validators/category';
 import validate from '../../validators';
-import { getCategoryOptions, addCategory } from '../services/category';
+import {
+  getCategoryOptions,
+  addCategory,
+  getCategory,
+  updateCategory
+} from '../services/category';
 
 import InputBox from '../../components/InputBox';
 import SelectBox from '../../components/SelectBox';
@@ -73,7 +79,7 @@ import RadioInput from '../../components/RadioInput';
 import Modal from '../../components/Modal';
 
 export default {
-  props: [],
+  props: ['isEditing', 'categoryId'],
   components: { InputBox, SelectBox, RadioInput, Modal },
   data() {
     return {
@@ -114,7 +120,8 @@ export default {
       ],
       newCategory: null,
       isLoading: false,
-      isInitialized: false
+      isInitialized: false,
+      fatalError: false
     };
   },
 
@@ -129,6 +136,28 @@ export default {
     },
 
     getOptions() {
+      if (this.isEditing) {
+        if (!this.categoryId) {
+          throw new Error('Category id is required in editing mode.');
+        }
+        getCategory(this.categoryId)
+          .then(data => {
+            if (!data) throw new Error();
+
+            this.values.name = data.name;
+            this.values.slug = data.slug;
+            this.values.parentCategoryId = data.parentCategoryId;
+            this.values.canHaveDivisions = data.canHaveDivisions ? 'yes' : 'no';
+          })
+          .catch(error => {
+            this.errors.default = 'Failed to communicate with server.';
+            this.fatalError = true;
+          })
+          .finally(() => {
+            this.isInitialized = true;
+          });
+      }
+
       getCategoryOptions()
         .then(categories => {
           if (categories) {
@@ -150,23 +179,43 @@ export default {
     submit() {
       if (this.checkForm()) {
         this.isLoading = true;
-        addCategory(this.values)
-          .then(category => {
-            if (category) {
-              this.newCategory = category;
-              this.values = this.dafaultValues;
-              this.$emit('new');
-              this.$emit('close');
-            }
-          })
-          .catch(error => {
-            if (error && error.data) {
-              this.errors = error.data;
-            }
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+        if (this.isEditing) {
+          updateCategory(this.categoryId, this.values)
+            .then(category => {
+              if (category) {
+                this.newCategory = category;
+                this.values = this.dafaultValues;
+                this.$emit('new');
+                this.$emit('close');
+              }
+            })
+            .catch(error => {
+              if (error && error.data) {
+                this.errors = error.data;
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        } else {
+          addCategory(this.values)
+            .then(category => {
+              if (category) {
+                this.newCategory = category;
+                this.values = this.dafaultValues;
+                this.$emit('new');
+                this.$emit('close');
+              }
+            })
+            .catch(error => {
+              if (error && error.data) {
+                this.errors = error.data;
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        }
       }
     },
 

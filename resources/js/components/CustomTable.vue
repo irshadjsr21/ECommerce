@@ -35,7 +35,7 @@
         </th>
       </thead>
 
-      <slot v-bind:contents="contents"></slot>
+      <slot v-bind:contents="localContent"></slot>
     </table>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   props: ['columns', 'contents', 'isLoading'],
   data() {
     return {
-      localContent: this.contents,
+      localContent: this.contents ? [...this.contents] : [],
       sortData: {
         column: null,
         asc: null
@@ -62,7 +62,15 @@ export default {
   methods: {
     sort(column) {
       if (this.sortData.column && this.sortData.column.name == column.name) {
-        this.sortData.asc = !this.sortData.asc;
+        if (this.sortData.asc) {
+          this.sortData.asc = false;
+        } else {
+          this.sortData = {
+            asc: null,
+            column: null
+          };
+          this.localContent = this.contents ? [...this.contents] : [];
+        }
       } else {
         this.sortData.column = column;
         this.sortData.asc = true;

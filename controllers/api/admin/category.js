@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const route = require('../../route');
 const validators = require('../../../validators/admin/category');
-const { Category } = require('../../../models');
+const { Category, Sequelize, sequelize } = require('../../../models');
 
 module.exports = {
   add: route(
@@ -41,6 +41,80 @@ module.exports = {
       inputBody.slug = inputBody.slug.toLowerCase();
       const category = await Category.create({ ...inputBody, level });
       res.json({ category });
+    },
+    {
+      validation: {
+        asObject: true,
+        throwError: true,
+        validators: [validators.new]
+      },
+      inputs: ['name', 'parentCategoryId', 'canHaveDivisions', 'slug']
+    }
+  ),
+
+  update: route(
+    async (req, res) => {
+      const { id } = req.params;
+      const { inputBody } = res.locals;
+      let level = 1;
+
+      if (inputBody.slug) {
+        const cWithSameSlug = await Category.findOne({
+          where: { slug: inputBody.slug, id: { [Sequelize.Op.not]: id } }
+        });
+        if (cWithSameSlug) {
+          throw new createError(409, 'Validation error.', {
+            errors: { slug: 'Category with this slug already exists.' }
+          });
+        }
+      }
+
+      if (!inputBody.parentCategoryId) inputBody.parentCategoryId = null;
+      else {
+        const parentCategory = await Category.findOne({
+          where: { id: inputBody.parentCategoryId, canHaveDivisions: true }
+        });
+        if (!parentCategory) {
+          throw new createError(createError.Conflict, 'Validation error.', {
+            errors: {
+              parentCategoryId: 'Selected parent category does not exist.'
+            }
+          });
+        } else {
+          level = parentCategory.level + 1;
+        }
+      }
+      inputBody.canHaveDivisions =
+        inputBody.canHaveDivisions == 'yes' ? true : false;
+
+      if (!inputBody.canHaveDivisions) {
+        const subCategory = await Category.findOne({
+          where: { parentCategoryId: id }
+        });
+
+        if (subCategory) {
+          throw new createError(409, 'Conflict.', {
+            errors: {
+              canHaveDivisions: 'This category already have divisions.'
+            }
+          });
+        }
+      }
+
+      await sequelize.transaction(async transaction => {
+        await Category.update(
+          { level: level + 1 },
+          { where: { parentCategoryId: id }, transaction }
+        );
+        await Category.update(
+          { ...inputBody, level },
+          { where: { id }, transaction }
+        );
+      });
+
+      const updatedCategory = await Category.findByPk(id);
+
+      res.json({ category: updatedCategory });
     },
     {
       validation: {

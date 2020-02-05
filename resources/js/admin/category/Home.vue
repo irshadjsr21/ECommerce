@@ -4,22 +4,25 @@
       <h1 class="text-medium mr-l">Categories</h1>
       <button
         class="btn btn-primary btn-sm flex align-items-center"
-        @click="showAddForm = true"
+        @click="showAddForm()"
       >
         <i class="material-icons">add</i>
         <span>New</span>
       </button>
     </div>
     <add-category-form
-      v-if="showAddForm"
+      v-if="addForm.isActive"
       class="mb-xl"
-      @close="showAddForm = false"
+      @close="addForm.isActive = false"
       @new="newCategoryAdded"
+      :isEditing="addForm.isEditing"
+      :categoryId="addForm.categoryId"
     ></add-category-form>
     <category-list
       ref="categoryList"
       class="mb-l"
       @view="showViewCategory"
+      @edit="showEditForm"
     ></category-list>
     <category-view
       ref="viewComponent"
@@ -40,8 +43,12 @@ export default {
   components: { AddCategoryForm, CategoryList, CategoryView },
   data() {
     return {
-      showAddForm: false,
-      viewCategory: []
+      viewCategory: [],
+      addForm: {
+        isActive: false,
+        isEditing: false,
+        categoryId: null
+      }
     };
   },
 
@@ -56,6 +63,22 @@ export default {
 
     newCategoryAdded() {
       this.$refs.categoryList.getData();
+    },
+
+    showAddForm() {
+      this.addForm = {
+        isActive: true,
+        isEditing: false,
+        categoryId: null
+      };
+    },
+
+    showEditForm(id) {
+      this.addForm = {
+        isActive: true,
+        isEditing: true,
+        categoryId: id
+      };
     }
   }
 };
