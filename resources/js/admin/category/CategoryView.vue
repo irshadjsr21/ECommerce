@@ -75,7 +75,7 @@
             <div v-if="category.parentCategory">
               <a
                 href="#"
-                @click="show(category.parentCategory.id)"
+                @click.prevent="show(category.parentCategory.id)"
                 class="anchor-reset"
                 >{{ category.parentCategory.name }}</a
               >
@@ -101,7 +101,7 @@
                 >
                   <a
                     href="#"
-                    @click="show(subCategory.id)"
+                    @click.prevent="show(subCategory.id)"
                     class="anchor-reset"
                     >{{ subCategory.name }}</a
                   >
@@ -129,7 +129,8 @@ export default {
   data() {
     return {
       category: null,
-      isLoading: false
+      isLoading: false,
+      preData: {}
     };
   },
 
@@ -146,17 +147,23 @@ export default {
   methods: {
     getCategory() {
       if (this.value && this.value.length > 0) {
-        this.isLoading = true;
-        getCategory(this.value[this.value.length - 1])
-          .then(data => {
-            this.category = data;
-          })
-          .catch(error => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+        const id = this.value[this.value.length - 1];
+        if (this.preData[id]) {
+          this.category = this.preData[id];
+        } else {
+          this.isLoading = true;
+          getCategory(id)
+            .then(data => {
+              this.category = data;
+              this.preData[id] = data;
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        }
       }
     },
 

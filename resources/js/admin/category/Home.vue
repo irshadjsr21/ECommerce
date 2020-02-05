@@ -23,7 +23,7 @@
     ></category-list>
     <category-view
       ref="viewComponent"
-      v-show="viewCategory.length > 0"
+      v-if="viewCategory.length > 0"
       :id="viewCategory"
       v-model="viewCategory"
       @close="closeViewCategory"
