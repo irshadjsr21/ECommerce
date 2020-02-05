@@ -1,66 +1,65 @@
 <template>
-  <div class="card card-medium m-auto aminate">
-    <h2 class="card-header flex justify-content-space-between">
-      <span>Add Category</span>
-      <button class="btn-reset" @click="emitClose">
-        <i class="material-icons">close</i>
-      </button>
-    </h2>
+  <modal @close="$emit('close')">
+    <template v-slot:header>
+      <h3>Add Category</h3>
+    </template>
 
-    <div class="card-body">
-      <form class="mb-l" v-if="isInitialized">
-        <input-box
-          class="mx-auto mb-l"
-          type="text"
-          label="Name"
-          name="name"
-          :error="errors.name"
-          v-model="values.name"
-          @input="nameChanged"
-        />
-        <input-box
-          class="mx-auto mb-l"
-          type="text"
-          label="Slug"
-          name="slug"
-          :error="errors.slug"
-          v-model="values.slug"
-          hint="This will be used as the URL path for the category."
-        />
-        <select-box
-          class="mx-auto mb-l"
-          label="Parent category"
-          name="parentCategoryId"
-          v-model="values.parentCategoryId"
-          :error="errors.parentCategoryId"
-          :options="categoryOptions"
-        />
-        <radio-input
-          class="mx-auto mb-l"
-          label="Can it have sub categories?"
-          name="canHaveDivisions"
-          v-model="values.canHaveDivisions"
-          :error="errors.canHaveDivisions"
-          :options="divisionOptions"
-          hint="If yes then it cannot have products directly under it."
-        />
-        <small class="text-danger" v-if="errors && errors.default">{{
-          errors.default
-        }}</small>
-        <div class="flex justify-content-center mt-xl">
-          <button
-            type="submit"
-            class="btn btn-primary btn-lg"
-            @click.prevent="submit"
-            :disabled="isLoading"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
-      <div class="loader loader-lg my-l" v-if="!isInitialized"></div>
-    </div>
-  </div>
+    <template v-slot:body>
+      <div class="form-container">
+        <form class="mb-l px-s" v-if="isInitialized">
+          <input-box
+            class="mx-auto mb-l"
+            type="text"
+            label="Name"
+            name="name"
+            :error="errors.name"
+            v-model="values.name"
+            @input="nameChanged"
+          />
+          <input-box
+            class="mx-auto mb-l"
+            type="text"
+            label="Slug"
+            name="slug"
+            :error="errors.slug"
+            v-model="values.slug"
+            hint="This will be used as the URL path for the category."
+          />
+          <select-box
+            class="mx-auto mb-l"
+            label="Parent category"
+            name="parentCategoryId"
+            v-model="values.parentCategoryId"
+            :error="errors.parentCategoryId"
+            :options="categoryOptions"
+          />
+          <radio-input
+            class="mx-auto mb-l"
+            label="Can it have sub categories?"
+            name="canHaveDivisions"
+            v-model="values.canHaveDivisions"
+            :error="errors.canHaveDivisions"
+            :options="divisionOptions"
+            hint="If yes then it cannot have products directly under it."
+          />
+          <small class="text-danger" v-if="errors && errors.default">{{
+            errors.default
+          }}</small>
+          <div class="flex justify-content-center mt-xl">
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg"
+              @click.prevent="submit"
+              :disabled="isLoading"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+        <div class="loader loader-lg my-l" v-if="!isInitialized"></div>
+      </div>
+    </template>
+  </modal>
 </template>
 
 <script>
@@ -71,10 +70,11 @@ import { getCategoryOptions, addCategory } from '../services/category';
 import InputBox from '../../components/InputBox';
 import SelectBox from '../../components/SelectBox';
 import RadioInput from '../../components/RadioInput';
+import Modal from '../../components/Modal';
 
 export default {
   props: [],
-  components: { InputBox, SelectBox, RadioInput },
+  components: { InputBox, SelectBox, RadioInput, Modal },
   data() {
     return {
       dafaultValues: {
@@ -173,11 +173,25 @@ export default {
         .toLowerCase()
         .split(' ')
         .join('-');
-    },
-
-    emitClose() {
-      this.$emit('close', true);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.form-container {
+  min-width: 700px;
+}
+
+@media (max-width: 1024px) {
+  .form-container {
+    min-width: 650px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    min-width: 70vw;
+  }
+}
+</style>
