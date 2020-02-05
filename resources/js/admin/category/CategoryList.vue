@@ -56,7 +56,7 @@
 import CustomTable from '../../components/CustomTable';
 import Pagination from '../../components/Pagination';
 import CategoryFilters from './CategoryFilters';
-import { getCategory } from '../services/category';
+import { getCategories } from '../services/category';
 
 export default {
   data() {
@@ -103,7 +103,7 @@ export default {
   components: { CustomTable, Pagination, CategoryFilters },
 
   mounted() {
-    getCategory(this.query)
+    getCategories(this.query)
       .then(data => {
         this.categories = data.categories;
         this.lastPage = data.lastPage;
@@ -118,7 +118,7 @@ export default {
 
   methods: {
     checkoutCategory(id) {
-      console.log('Checkout ' + id);
+      this.$emit('view', id);
     },
     editCategory(id) {
       console.log('Checkout ' + id);
@@ -133,7 +133,7 @@ export default {
     },
     getData() {
       this.isLoading = true;
-      getCategory({ ...this.query, page: this.currentPage })
+      getCategories({ ...this.query, page: this.currentPage })
         .then(data => {
           this.categories = data.categories;
           this.lastPage = data.lastPage;

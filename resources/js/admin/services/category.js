@@ -50,11 +50,26 @@ export async function addCategory(body) {
   });
 }
 
-export async function getCategory(query) {
+export async function getCategories(query) {
   return new Promise(async (resolve, reject) => {
     try {
       const queryString = query ? '?' + stringify(query) : '';
       const res = await http.get(baseUrl + queryString);
+      if (res && res.data) {
+        resolve(res.data);
+      } else {
+        throw new Error('No data');
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export async function getCategory(id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await http.get(baseUrl + '/' + id);
       if (res && res.data) {
         resolve(res.data);
       } else {

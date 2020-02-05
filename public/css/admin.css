@@ -170,9 +170,9 @@ button {
 */
 .anchor-reset {
   text-decoration: none;
-  color: initial; }
+  color: #383838; }
   .anchor-reset:active {
-    color: initial;
+    color: #383838;
     text-decoration: none; }
   .anchor-reset:hover {
     text-decoration: underline; }

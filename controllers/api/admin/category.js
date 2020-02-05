@@ -101,5 +101,16 @@ module.exports = {
       categories,
       lastPage: Math.ceil(totalCategories / itemsPerPage)
     });
+  }),
+
+  getById: route(async (req, res) => {
+    const { id } = req.params;
+    const category = await Category.findByPk(id, {
+      include: [
+        { model: Category, as: 'subCategories' },
+        { model: Category, as: 'parentCategory' }
+      ]
+    });
+    res.json(category);
   })
 };

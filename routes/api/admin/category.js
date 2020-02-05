@@ -7,5 +7,6 @@ router.post('/', categoryController.add);
 router.get('/', categoryController.list);
 router.get('/parent-options', categoryController.getParentOptions);
 router.get('/level-options', categoryController.getLevels);
+router.get('/:id', categoryController.getById);
 
 module.exports = router;

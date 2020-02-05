@@ -18,20 +18,39 @@
         @close="showAddForm = false"
       ></add-category-form>
     </transition>
-    <category-list></category-list>
+    <category-list class="mb-l" @view="showViewCategory"></category-list>
+    <category-view
+      ref="viewComponent"
+      v-show="viewCategory.length > 0"
+      :id="viewCategory"
+      v-model="viewCategory"
+      @close="closeViewCategory"
+    ></category-view>
   </div>
 </template>
 
 <script>
 import AddCategoryForm from './AddCategoryForm';
 import CategoryList from './CategoryList';
+import CategoryView from './CategoryView';
 
 export default {
-  components: { AddCategoryForm, CategoryList },
+  components: { AddCategoryForm, CategoryList, CategoryView },
   data() {
     return {
-      showAddForm: false
+      showAddForm: false,
+      viewCategory: []
     };
+  },
+
+  methods: {
+    showViewCategory(id) {
+      this.viewCategory.push(id);
+    },
+
+    closeViewCategory() {
+      this.viewCategory = [];
+    }
   }
 };
 </script>
