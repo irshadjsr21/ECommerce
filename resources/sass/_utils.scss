@@ -193,6 +193,10 @@ button {
       cursor: pointer;
     }
   }
+
+  &.table-loading {
+    opacity: 0.6;
+  }
 }
 
 @media (max-width: 768px) {

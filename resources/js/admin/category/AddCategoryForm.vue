@@ -155,6 +155,8 @@ export default {
             if (category) {
               this.newCategory = category;
               this.values = this.dafaultValues;
+              this.$emit('new');
+              this.$emit('close');
             }
           })
           .catch(error => {

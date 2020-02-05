@@ -4,8 +4,17 @@
 
     <div class="card-body">
       <div v-if="isInitialized">
-        <category-filters class="mb-s" @change="filterChanged" />
-        <custom-table :columns="tableHeaders" :contents="categories">
+        <category-filters
+          :isLoading="isLoading"
+          class="mb-s"
+          @change="filterChanged"
+          @refresh="getData"
+        />
+        <custom-table
+          :isLoading="isLoading"
+          :columns="tableHeaders"
+          :contents="categories"
+        >
           <template v-slot:default="slotProps">
             <tr v-for="category of slotProps.contents" v-bind:key="category.id">
               <td>{{ category.name }}</td>

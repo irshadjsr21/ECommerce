@@ -14,8 +14,13 @@
       v-if="showAddForm"
       class="mb-xl"
       @close="showAddForm = false"
+      @new="newCategoryAdded"
     ></add-category-form>
-    <category-list class="mb-l" @view="showViewCategory"></category-list>
+    <category-list
+      ref="categoryList"
+      class="mb-l"
+      @view="showViewCategory"
+    ></category-list>
     <category-view
       ref="viewComponent"
       v-show="viewCategory.length > 0"
@@ -47,6 +52,10 @@ export default {
 
     closeViewCategory() {
       this.viewCategory = [];
+    },
+
+    newCategoryAdded() {
+      this.$refs.categoryList.getData();
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <table class="table table-striped">
+    <table class="table table-striped" :class="{ 'table-loading': isLoading }">
       <thead>
         <th v-for="column of columns" :key="column.name">
           <button
@@ -42,7 +42,7 @@
 
 <script>
 export default {
-  props: ['columns', 'contents', 'display'],
+  props: ['columns', 'contents', 'isLoading'],
   data() {
     return {
       localContent: this.contents,

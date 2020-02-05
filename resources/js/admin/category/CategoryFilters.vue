@@ -1,14 +1,26 @@
 <template>
   <div>
-    <button
-      class="btn btn-primary flex align-items-center justify-content-center"
-      @click="showFilters = true"
-    >
-      <i class="material-icons mr-4">
-        filter_list
-      </i>
-      <span>Add filters</span>
-    </button>
+    <div class="flex justify-content-space-between mb-s">
+      <button
+        class="btn btn-primary flex align-items-center justify-content-center"
+        @click="showFilters = true"
+      >
+        <i class="material-icons mr-4">
+          filter_list
+        </i>
+        <span>Add filters</span>
+      </button>
+      <button
+        @click="$emit('refresh')"
+        class="btn btn-primary flex align-items-center"
+        :disabled="isLoading"
+      >
+        <i class="material-icons mr-4">
+          refresh
+        </i>
+        <span>Refresh</span>
+      </button>
+    </div>
     <div v-if="bubbles.length > 0" class="mt-s">
       <h4 class="mt-0 mb-s text-medium">Active filters</h4>
       <div class="flex flex-wrap">
@@ -26,7 +38,9 @@
             @click="clearFilter(bubble)"
           >
             <small class="mr-4">X</small>
-            <span>{{ bubble.displayName }} : {{ bubble.value }}</span>
+            <span
+              >{{ bubble.displayName }} : {{ bubble.value | capitalize }}</span
+            >
           </button>
         </div>
       </div>
@@ -48,6 +62,7 @@ import AdminFilter from '../../components/AdminFilter';
 import { getCategoryLevels } from '../services/category';
 
 export default {
+  props: ['isLoading'],
   data() {
     return {
       showFilters: false,
@@ -124,6 +139,14 @@ export default {
 
   components: {
     AdminFilter
+  },
+
+  filters: {
+    capitalize: function(value) {
+      if (!value) return '';
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
   },
 
   mounted() {
