@@ -14,7 +14,7 @@
       v-if="addForm.isActive"
       class="mb-xl"
       @close="addForm.isActive = false"
-      @new="newCategoryAdded"
+      @new="refreshTable"
       :isEditing="addForm.isEditing"
       :categoryId="addForm.categoryId"
     ></add-category-form>
@@ -23,6 +23,7 @@
       class="mb-l"
       @view="showViewCategory"
       @edit="showEditForm"
+      @delete="deleteCategory"
     ></category-list>
     <category-view
       ref="viewComponent"
@@ -38,6 +39,8 @@
 import AddCategoryForm from './AddCategoryForm';
 import CategoryList from './CategoryList';
 import CategoryView from './CategoryView';
+
+import { deleteCategory } from '../services/category';
 
 export default {
   components: { AddCategoryForm, CategoryList, CategoryView },
@@ -61,7 +64,17 @@ export default {
       this.viewCategory = [];
     },
 
-    newCategoryAdded() {
+    deleteCategory(id) {
+      deleteCategory(id)
+        .then(data => {
+          this.refreshTable();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    refreshTable() {
       this.$refs.categoryList.getData();
     },
 

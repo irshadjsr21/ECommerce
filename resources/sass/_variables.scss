@@ -66,5 +66,9 @@ $btn-types-color: (
   'primary': (
     'color': $brand-counter-color,
     'background': $brand-color
+  ),
+  'danger': (
+    'color': $brand-counter-color,
+    'background': $danger-color
   )
 );

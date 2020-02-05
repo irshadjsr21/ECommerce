@@ -79,6 +79,10 @@ button {
   background-color: #2f6dca;
   color: #ffffff; }
 
+.btn-danger {
+  background-color: #e93f3f;
+  color: #ffffff; }
+
 @media (max-width: 768px) {
   .btn {
     padding: 8px 12px; } }
@@ -236,6 +240,9 @@ button {
 
 .justify-content-space-around {
   justify-content: space-around; }
+
+.justify-content-end {
+  justify-content: flex-end; }
 
 .align-items-center {
   align-items: center; }

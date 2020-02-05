@@ -4,6 +4,12 @@
 
     <div class="card-body">
       <div v-if="isInitialized">
+        <delete-alert
+          v-if="toDeleteCategory"
+          :item="`the category named '${toDeleteCategory.name}'`"
+          @close="toDeleteCategory = null"
+          @delete="deleteSelected"
+        ></delete-alert>
         <category-filters
           :isLoading="isLoading"
           class="mb-s"
@@ -40,7 +46,7 @@
                 >
                   <i class="material-icons btn-icon">edit</i>
                 </button>
-                <button @click="deleteCategory(category.id)" class="btn-reset">
+                <button @click="showDeleteCategory(category)" class="btn-reset">
                   <i class="material-icons btn-icon">delete</i>
                 </button>
               </td>
@@ -64,6 +70,7 @@
 <script>
 import CustomTable from '../../components/CustomTable';
 import Pagination from '../../components/Pagination';
+import DeleteAlert from '../../components/DeleteAlert';
 import CategoryFilters from './CategoryFilters';
 import { getCategories } from '../services/category';
 
@@ -74,6 +81,7 @@ export default {
       error: null,
       isLoading: false,
       isInitialized: false,
+      toDeleteCategory: null,
       query: {},
       tableHeaders: [
         {
@@ -109,7 +117,7 @@ export default {
       lastPage: 1
     };
   },
-  components: { CustomTable, Pagination, CategoryFilters },
+  components: { CustomTable, Pagination, CategoryFilters, DeleteAlert },
 
   mounted() {
     getCategories(this.query)
@@ -132,8 +140,14 @@ export default {
     editCategory(id) {
       this.$emit('edit', id);
     },
-    deleteCategory(id) {
-      console.log('Checkout ' + id);
+    showDeleteCategory(category) {
+      this.toDeleteCategory = category;
+    },
+    deleteSelected() {
+      if (this.toDeleteCategory) {
+        this.$emit('delete', this.toDeleteCategory.id);
+        this.toDeleteCategory = null;
+      }
     },
     pageChanged(page) {
       this.currentPage = page;

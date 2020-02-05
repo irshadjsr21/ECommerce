@@ -186,5 +186,26 @@ module.exports = {
       ]
     });
     res.json(category);
+  }),
+
+  delete: route(async (req, res) => {
+    const { id } = req.params;
+    const subCategory = await Category.findOne({
+      where: { parentCategoryId: id }
+    });
+    if (subCategory) {
+      throw new createError(
+        409,
+        'Cannot delete category because it has sub categories.',
+        {
+          errors: {
+            default: 'Cannot delete category because it has sub categories.'
+          }
+        }
+      );
+    }
+
+    await Category.destroy({ where: { id } });
+    res.json({});
   })
 };

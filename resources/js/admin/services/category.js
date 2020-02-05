@@ -96,3 +96,18 @@ export async function getCategory(id) {
     }
   });
 }
+
+export async function deleteCategory(id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await http.delete(baseUrl + '/' + id);
+      if (res && res.data) {
+        resolve(res.data);
+      } else {
+        resolve();
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
