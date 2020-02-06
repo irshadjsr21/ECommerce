@@ -164,7 +164,14 @@ module.exports = {
       where: query,
       order: orderArr,
       offset: (page - 1) * itemsPerPage,
-      limit: itemsPerPage
+      limit: itemsPerPage,
+      include: [
+        {
+          model: Category,
+          as: 'subCategories',
+          attributes: ['id']
+        }
+      ]
     });
 
     const totalCategories = await Category.count({ where: query });

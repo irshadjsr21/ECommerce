@@ -67,6 +67,12 @@ button {
   background-color: transparent;
   outline: none;
   border: none;
+  font-size: 1rem;
+  color: $text-color;
+
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 
 .btn-icon {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-xl">
     <div class="flex align-items-center">
       <h1 class="text-medium mr-l">Categories</h1>
       <button
@@ -12,7 +12,6 @@
     </div>
     <add-category-form
       v-if="addForm.isActive"
-      class="mb-xl"
       @close="addForm.isActive = false"
       @new="refreshTable"
       :isEditing="addForm.isEditing"
@@ -31,7 +30,9 @@
       :id="viewCategory"
       v-model="viewCategory"
       @close="closeViewCategory"
+      class="mb-l"
     ></category-view>
+    <category-tree ref="categoryTree"></category-tree>
   </div>
 </template>
 
@@ -39,11 +40,12 @@
 import AddCategoryForm from './AddCategoryForm';
 import CategoryList from './CategoryList';
 import CategoryView from './CategoryView';
+import CategoryTree from './CategoryTree';
 
 import { deleteCategory } from '../services/category';
 
 export default {
-  components: { AddCategoryForm, CategoryList, CategoryView },
+  components: { AddCategoryForm, CategoryList, CategoryView, CategoryTree },
   data() {
     return {
       viewCategory: [],
@@ -79,6 +81,7 @@ export default {
 
     refreshTable() {
       this.$refs.categoryList.getData();
+      this.$refs.categoryTree.getData();
     },
 
     showAddForm() {
