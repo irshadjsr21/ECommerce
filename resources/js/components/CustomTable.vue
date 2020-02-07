@@ -55,7 +55,7 @@ export default {
 
   watch: {
     contents: function(newVal) {
-      this.localContent = newVal;
+      this.localContent = [...newVal];
     }
   },
 
