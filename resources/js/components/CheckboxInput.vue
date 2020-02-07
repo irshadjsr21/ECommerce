@@ -17,7 +17,7 @@
           :name="name"
           :value="option.value"
           @input="handleInput"
-          :checked="value.includes(option.value)"
+          :checked="value && value.includes(option.value)"
         />
       </div>
     </div>
@@ -34,7 +34,7 @@
           :name="name"
           :value="option.value"
           @input="handleInput"
-          :checked="value.includes(option.value)"
+          :checked="value && value.includes(option.value)"
         />
         <label :for="option.name" class="input-label">{{ option.name }}</label>
       </div>

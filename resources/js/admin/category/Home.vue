@@ -37,12 +37,26 @@
 </template>
 
 <script>
-import AddCategoryForm from './AddCategoryForm';
-import CategoryList from './CategoryList';
-import CategoryView from './CategoryView';
-import CategoryTree from './CategoryTree';
+const AddCategoryForm = () =>
+  import(
+    /* webpackChunkName: "admin-add-category-form"*/
 
-import { deleteCategory } from '../services/category';
+    /* webpackPrefetch: true */ './AddCategoryForm'
+  );
+const CategoryView = () =>
+  import(
+    /* webpackChunkName: "admin-category-view"*/
+
+    /* webpackPrefetch: true */ './CategoryView'
+  );
+import CategoryList from './CategoryList';
+const CategoryTree = () =>
+  import(
+    /* webpackChunkName: "admin-category-tree"*/
+    './CategoryTree'
+  );
+
+const { deleteCategory } = () => import('../services/category');
 
 export default {
   components: { AddCategoryForm, CategoryList, CategoryView, CategoryTree },

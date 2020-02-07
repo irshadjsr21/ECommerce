@@ -48,7 +48,7 @@
     <admin-filter
       ref="adminFilter"
       :defaultValues="defaultFilterValues"
-      v-show="showFilters"
+      v-if="showFilters"
       @close="showFilters = false"
       :options="filterOptions"
       @query="queryChanged"
@@ -58,7 +58,8 @@
 </template>
 
 <script>
-import AdminFilter from '../../components/AdminFilter';
+const AdminFilter = () =>
+  import(/* webpackChunkName: "admin-filter" */ '../../components/AdminFilter');
 import { getCategoryLevels } from '../services/category';
 
 export default {

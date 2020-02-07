@@ -7,14 +7,16 @@ html
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
     meta(name="csrf-token", content=csrfToken)
   body
-    #app
-      include ./includes/navbar.pug
-      .adminNavMargin
-        include ./includes/topbar.pug
-        main.px-l
-          block content
+    include ./includes/navbar.pug
+    .adminNavMargin
+      include ./includes/topbar.pug
+      main#app.px-l
+        router-view
+          .py-xl
+            .loader.loader-page
+
   script.
     window.adminPath = '#{adminPath}';
-  block preScript
-  script(src="/js/main.bundle.js")
-  block postScript
+  script(src="/js/common.bundle.js")
+  block scripts
+  
