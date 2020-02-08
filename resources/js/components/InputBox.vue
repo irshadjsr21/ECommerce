@@ -1,6 +1,7 @@
 <template>
-  <div class="input-container mb-l">
+  <div class="input-container">
     <label :for="name" class="input-label">{{ label }}</label>
+    <small v-if="hint" class="mt-2 text-mute">{{ hint }}</small>
     <input
       :id="name"
       class="input-box"
@@ -16,7 +17,7 @@
 
 <script>
 export default {
-  props: ['type', 'label', 'error', 'name', 'value'],
+  props: ['type', 'label', 'error', 'name', 'value', 'hint'],
 
   data() {
     return {};

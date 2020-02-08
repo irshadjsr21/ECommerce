@@ -19,6 +19,10 @@ body {
   background-color: $bg-color;
 }
 
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 14px;
@@ -30,7 +34,7 @@ body {
 */
 
 .btn {
-  padding: 10px 15px;
+  padding: 8px 12px;
   border-radius: 2px;
   outline: none;
   border: none;
@@ -39,6 +43,10 @@ body {
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 .btn.btn-simple {
@@ -46,7 +54,33 @@ body {
 }
 
 .btn.btn-lg {
+  padding: 10px 15px;
   font-size: 1.2rem;
+}
+
+.btn.btn-sm {
+  padding: 6px 8px;
+}
+
+.btn-reset {
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  font-size: 1rem;
+  color: $text-color;
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.btn-icon {
+  color: lighten($color: $text-color, $amount: 40);
+
+  &:hover {
+    color: $text-color;
+  }
 }
 
 @each $key, $value in $btn-types-color {
@@ -63,16 +97,169 @@ body {
 }
 
 /*
+  ========= Toast Classes =========
+*/
+
+.toast-error {
+  background-color: $danger-color !important;
+  color: $brand-counter-color !important;
+  i {
+    color: $brand-counter-color !important;
+  }
+}
+
+/*
+  ========= Card Classes =========
+*/
+
+.card {
+  background-color: $brand-counter-color;
+  box-shadow: $card-shadow;
+
+  .card-header {
+    padding: 15px;
+    font-size: 1.2rem;
+    background-color: $grey-darker-color;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+}
+
+.card-medium {
+  max-width: 800px;
+}
+
+.card-full {
+  width: 100%;
+}
+
+/*
+  ========= Table Classes =========
+*/
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+  border: 1px solid $grey-darker-color;
+  min-width: 500px;
+  border-radius: 5px;
+
+  thead {
+    background-color: $text-color;
+    color: $brand-counter-color;
+    th {
+      font-weight: 500;
+      text-align: left;
+
+      button {
+        font-weight: 500;
+        font-size: 1rem;
+        color: $brand-counter-color;
+      }
+
+      &:first-child {
+        border-top-left-radius: 5px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 5px;
+      }
+    }
+  }
+
+  th:first-child,
+  td:first-child {
+    padding-left: 20px;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 20px;
+  }
+
+  td,
+  th {
+    padding: 15px;
+    min-width: 100px;
+  }
+
+  &.table-striped {
+    tr:nth-child(odd) {
+      background-color: $off-white-color;
+    }
+  }
+
+  &.table-clickable {
+    tr {
+      cursor: pointer;
+    }
+    tr:hover {
+      background-color: $off-white-color;
+    }
+  }
+
+  &.table-sortable {
+    th {
+      cursor: pointer;
+    }
+  }
+
+  &.table-loading {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .table {
+    td,
+    th {
+      padding: 8px;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: 15px;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 15px;
+    }
+
+    td,
+    th {
+      padding: 5px;
+    }
+  }
+}
+
+/*
   ========= Anchor Classes =========
 */
 
 .anchor-reset {
   text-decoration: none;
-  color: initial;
+  color: $text-color;
 
   &:active {
-    color: initial;
+    color: $text-color;
     text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
@@ -81,18 +268,24 @@ body {
 */
 
 .input-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+
   .input-label {
     font-size: 1rem;
   }
 
   .input-box {
     width: 100%;
+    max-width: 600px;
     border-radius: 2px;
     padding: 10px;
     font-size: 1.1rem;
     border: none;
     box-shadow: $input-shadow;
     margin: 0.3rem 0;
+    background-color: $brand-counter-color;
 
     &:focus {
       outline-color: $brand-color;
@@ -100,6 +293,26 @@ body {
 
     &.input-box-invalid {
       outline: 1px solid $danger-color;
+    }
+  }
+
+  &.input-container-row {
+    flex-direction: row;
+    align-items: center;
+    .input-label {
+      margin-right: 10px;
+    }
+  }
+
+  &.input-container-digit {
+    .input-box {
+      max-width: 50px;
+    }
+  }
+
+  &.input-container-sm {
+    .input-box {
+      max-width: 200px;
     }
   }
 }
@@ -140,8 +353,16 @@ body {
   justify-content: space-around;
 }
 
+.justify-content-end {
+  justify-content: flex-end;
+}
+
 .align-items-center {
   align-items: center;
+}
+
+.align-items-start {
+  align-items: flex-start;
 }
 
 /*
@@ -178,6 +399,62 @@ body {
 
 .text-mute {
   opacity: 0.8;
+}
+
+.text-default {
+  color: $text-color;
+}
+
+/*
+  ========= Loader classes =========
+*/
+
+.loader {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  &::after {
+    content: '';
+    animation-name: loaderAnimation;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    width: 100px;
+    height: 100px;
+    border: 5px solid $grey-color;
+    border-top-color: $brand-color;
+    border-radius: 50%;
+  }
+
+  &.loader-lg {
+    &::after {
+      width: 150px;
+      height: 150px;
+      border-width: 8px;
+    }
+  }
+
+  &.loader-page {
+    margin: 100px 0;
+    &::after {
+      width: 180px;
+      height: 180px;
+      border-width: 10px;
+    }
+  }
+}
+
+@keyframes loaderAnimation {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /*

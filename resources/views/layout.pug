@@ -11,4 +11,7 @@ html
       include ./includes/topbar.pug
       block content
       include ./includes/footer.pug
-  script(src="/js/bundle.js")
+  block preScript
+  script(src="/js/common.bundle.js")
+  script(src="/js/user.bundle.js")
+  block postScript

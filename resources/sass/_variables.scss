@@ -8,7 +8,8 @@ $brand-color: #2f6dca;
 $brand-counter-color: #ffffff;
 $off-white-color: #f2f2f2;
 $grey-color: #f2f2f2;
-$danger-color: #e93f3f;
+$grey-darker-color: #d9d9d9;
+$danger-color: #c52b2b;
 
 /*
   ========== Shadow Variable ==========
@@ -17,6 +18,8 @@ $danger-color: #e93f3f;
 $component-shadow: 0px 0px 3px rgba(0, 0, 0, 0.17);
 $btn-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
 $input-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
+$card-shadow: 1px 2px 4px rgba(0, 0, 0, 0.17);
+$modal-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
 
 /*
   ========= Animation speeds ========
@@ -29,6 +32,7 @@ $default-animation-time: 0.3s;
 */
 
 $margin-sizes: (
+  'auto': auto,
   '0': 0rem,
   '2': 0.125rem,
   '4': 0.25rem,
@@ -41,6 +45,7 @@ $margin-sizes: (
   'xl': 1.5625rem
 );
 $padding-sizes: (
+  'auto': auto,
   '0': 0rem,
   '2': 0.125rem,
   '4': 0.25rem,
@@ -61,5 +66,9 @@ $btn-types-color: (
   'primary': (
     'color': $brand-counter-color,
     'background': $brand-color
+  ),
+  'danger': (
+    'color': $brand-counter-color,
+    'background': $danger-color
   )
 );

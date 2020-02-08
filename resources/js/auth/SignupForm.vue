@@ -1,6 +1,7 @@
 <template>
   <form ref="form" action="/signup" method="post" class="mb-l">
     <input-box
+      class="mb-l"
       type="text"
       label="First Name"
       name="firstName"
@@ -8,6 +9,7 @@
       v-model="values.firstName"
     />
     <input-box
+      class="mb-l"
       type="text"
       label="Last Name"
       name="lastName"
@@ -15,6 +17,7 @@
       v-model="values.lastName"
     />
     <input-box
+      class="mb-l"
       type="email"
       label="Email"
       name="email"
@@ -22,6 +25,7 @@
       v-model="values.email"
     />
     <input-box
+      class="mb-l"
       type="password"
       label="Password"
       name="password"
@@ -29,9 +33,17 @@
       v-model="values.password"
     />
     <csrf-input />
-    <small class="text-danger" v-if="errors && errors.default">{{ errors.default }}</small>
+    <small class="text-danger" v-if="errors && errors.default">{{
+      errors.default
+    }}</small>
     <div class="flex justify-content-center mt-xl">
-      <button type="submit" class="btn btn-primary btn-lg" @click.prevent="submit">Signup</button>
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+        @click.prevent="submit"
+      >
+        Signup
+      </button>
     </div>
   </form>
 </template>
@@ -40,8 +52,12 @@
 import schema from '../validators/signup';
 import validate from '../validators';
 
+import InputBox from '../components/InputBox';
+import CsrfInput from '../components/CsrfInput';
+
 export default {
   props: ['oldInputs', 'serverError'],
+  components: { InputBox, CsrfInput },
   data() {
     return {
       values: {

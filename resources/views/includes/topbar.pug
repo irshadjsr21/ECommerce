@@ -5,7 +5,7 @@
   .btnContainer.flex
     if isLoggedIn
       form(action="/logout", method="post")
-        csrf-input
+        include ./csrfInput.pug
         button.btn.btn-default.btn-simple(type="submit") Logout 
     else
       a.btn.btn-default.btn-simple.mr-s(href="/login") Login

@@ -1,13 +1,10 @@
-div.w-100.h-100
-  .topbar.topbar-sm
-    .flex.align-items-center
-      label.navToggle.mr-s(for="navToggle")
-        i.material-icons.navToggleIcon menu
-      a(href=adminPath)
-        img.logo(src="/images/logo.svg")
-    .btnContainer.flex
-      form(action="/logout", method="post")
-        csrf-input
-        button.btn.btn-default.btn-simple(type="submit") Logout 
-  main.mainContent.px-l
-    block content
+.topbar.topbar-sm
+  .flex.align-items-center
+    label.navToggle.mr-s(for="navToggle")
+      i.material-icons.navToggleIcon menu
+    a(href=adminPath)
+      img.logo(src="/images/logo.svg")
+  .btnContainer.flex
+    form(action="/logout", method="post")
+      include ../../includes/csrfInput.pug
+      button.btn.btn-default.btn-simple(type="submit") Logout 

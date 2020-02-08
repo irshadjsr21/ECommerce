@@ -3,6 +3,6 @@ const router = express.Router();
 
 const pagesController = require('../../../controllers/pages/admin/category');
 
-router.get('/', pagesController.home);
+router.use('*', pagesController.home);
 
 module.exports = router;
