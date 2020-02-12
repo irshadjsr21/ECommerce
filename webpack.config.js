@@ -17,6 +17,10 @@ module.exports = {
     'admin-category': [
       '@babel/polyfill',
       path.resolve(__dirname, 'resources', 'js', 'admin', 'category', 'main.js')
+    ],
+    'admin-product': [
+      '@babel/polyfill',
+      path.resolve(__dirname, 'resources', 'js', 'admin', 'product', 'main.js')
     ]
   },
   output: {

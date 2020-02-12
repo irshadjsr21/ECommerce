@@ -134,6 +134,21 @@ module.exports = {
     res.json({ categories });
   }),
 
+  getProductOptions: route(async (req, res) => {
+    const categories = await Category.findAll({
+      attributes: ['id', 'name'],
+      where: { canHaveDivisions: false },
+      include: [
+        {
+          model: Category,
+          as: 'parentCategory',
+          attributes: ['id', 'name']
+        }
+      ]
+    });
+    res.json({ categories });
+  }),
+
   getLevels: route(async (req, res) => {
     const levels = await Category.aggregate('level', 'DISTINCT', {
       plain: false

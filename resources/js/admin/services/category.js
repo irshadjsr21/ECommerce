@@ -19,6 +19,22 @@ export async function getCategoryOptions() {
   });
 }
 
+export async function getProductCategoryOptions() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await http.get(baseUrl + '/product-options');
+      if (res && res.data) {
+        const categories = res.data.categories;
+        resolve(categories);
+      } else {
+        throw new Error('No data');
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export async function getCategoryLevels() {
   return new Promise(async (resolve, reject) => {
     try {

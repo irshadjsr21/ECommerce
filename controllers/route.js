@@ -13,7 +13,6 @@ const { errors: errorStrings } = require('../strings');
  */
 const covertErrorToObject = errors => {
   const fieldErrors = {};
-  console.log(errors);
   for (const error of errors) {
     if (error.param && !fieldErrors[error.param])
       fieldErrors[error.param] = error.msg;

@@ -1,19 +1,19 @@
-import Joi from '@hapi/joi';
+import { object, string } from '@hapi/joi';
 
-const schema = Joi.object({
-  firstName: Joi.string()
+const schema = object({
+  firstName: string()
     .required()
     .messages({
       'string.empty': `First name is required.`,
       'string.required': `First name is required.`
     }),
-  lastName: Joi.string()
+  lastName: string()
     .required()
     .messages({
       'string.empty': `Last name is required.`,
       'string.required': `Last name is required.`
     }),
-  email: Joi.string()
+  email: string()
     .required()
     .email({ tlds: false })
     .messages({
@@ -21,7 +21,7 @@ const schema = Joi.object({
       'string.required': `Email is required.`,
       'string.email': `Email is not valid.`
     }),
-  password: Joi.string()
+  password: string()
     .required()
     .min(8)
     .messages({

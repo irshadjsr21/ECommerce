@@ -9,7 +9,7 @@
             <div>
               <slot name="header"></slot>
             </div>
-            <button class="btn-reset" @click="$emit('close')">
+            <button class="btn-reset" @click.prevent="$emit('close')">
               <i class="material-icons">close</i>
             </button>
           </div>
