@@ -1,5 +1,7 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 const commonChunkList = [
   'vue',
   '@babel/polyfill',
@@ -51,7 +53,7 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
-  plugins: [new VueLoaderPlugin()],
+  plugins: [new VueLoaderPlugin(), new CleanWebpackPlugin()],
   optimization: {
     splitChunks: {
       chunks: 'async',
