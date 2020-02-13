@@ -65,7 +65,6 @@
 
 <script>
 import schema from '../validators/category';
-import validate from '../../validators';
 import {
   getCategoryOptions,
   addCategory,
@@ -131,7 +130,8 @@ export default {
 
   methods: {
     checkForm() {
-      this.errors = validate(schema, this.values) || {};
+      const { errors } = schema.validate(this.values);
+      this.errors = errors;
       return Object.keys(this.errors).length == 0;
     },
 

@@ -56,7 +56,7 @@ const CategoryTree = () =>
     './CategoryTree'
   );
 
-const { deleteCategory } = () => import('../services/category');
+import { deleteCategory } from '../services/category';
 
 export default {
   components: { AddCategoryForm, CategoryList, CategoryView, CategoryTree },

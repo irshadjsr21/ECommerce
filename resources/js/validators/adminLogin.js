@@ -1,28 +1,12 @@
-import { object, string } from '@hapi/joi';
+import { Validator, Rule } from './index';
 
-const schema = object({
-  email: string()
-    .required()
-    .email({ tlds: false })
-    .messages({
-      'string.empty': `Email is required.`,
-      'string.required': `Email is required.`,
-      'string.email': `Email is not valid.`
-    }),
-  password: string()
-    .required()
-    .min(8)
-    .messages({
-      'string.empty': `Password is required.`,
-      'string.required': `Password is required.`,
-      'string.min': `Password should be minimim of {#limit} characters.`
-    }),
-  secret: string()
-    .required()
-    .messages({
-      'string.empty': `Secret is required.`,
-      'string.required': `Secret is required.`
-    })
+export default new Validator({
+  email: Rule.create('Email')
+    .isString()
+    .isEmail()
+    .label('Email'),
+  password: Rule.create('Password')
+    .isString()
+    .isLength({ min: 8 }),
+  secret: Rule.create('Secret').isString()
 });
-
-export default schema;

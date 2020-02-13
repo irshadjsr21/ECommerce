@@ -79,7 +79,6 @@ import SelectBox from '../../components/SelectBox';
 import TextareaInput from '../../components/TextareaInput';
 import MarkdownInput from '../../components/MarkdownInput';
 import schema from '../validators/product';
-import validate from '../../validators';
 
 export default {
   components: { InputBox, SelectBox, TextareaInput, MarkdownInput },
@@ -134,7 +133,8 @@ export default {
 
   methods: {
     checkForm() {
-      this.errors = validate(schema, this.values) || {};
+      const { errors } = schema.validate(this.values);
+      this.errors = errors;
       return Object.keys(this.errors).length == 0;
     },
 

@@ -1,27 +1,13 @@
-import Joi from '@hapi/joi';
+import { Validator, Rule } from '../../validators';
 
-const schema = Joi.object({
-  name: Joi.string()
-    .required()
-    .messages({
-      'string.empty': `Name is required.`,
-      'string.required': `Name is required.`
-    }),
-  slug: Joi.string()
-    .required()
-    .regex(new RegExp('^[A-Z-]+$', 'i'))
-    .messages({
-      'string.empty': `Slug is required.`,
-      'string.required': `Slug is required.`,
-      'string.pattern.base': `Slug should contain only alphabets and '-'.`
-    }),
-  parentCategoryId: Joi.optional(),
-  canHaveDivisions: Joi.string()
-    .required()
-    .messages({
-      'string.empty': `Please select one.`,
-      'string.required': `Please select one.`
-    })
+export default new Validator({
+  name: Rule.create('Name').isString(),
+  slug: Rule.create('Slug')
+    .isString()
+    .regex(
+      new RegExp('^[A-Z-]+$', 'i'),
+      'Slug should contain alphabets and `-`.'
+    ),
+  parentCategoryId: Rule.create('Parent category').optional(),
+  canHaveDivisions: Rule.create().withMessage('Please select one.')
 });
-
-export default schema;

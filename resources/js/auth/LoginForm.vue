@@ -49,7 +49,6 @@
 <script>
 import loginSchema from '../validators/login';
 import adminLoginSchema from '../validators/adminLogin';
-import validate from '../validators';
 
 import InputBox from '../components/InputBox';
 import CsrfInput from '../components/CsrfInput';
@@ -102,7 +101,8 @@ export default {
     },
 
     checkForm() {
-      this.errors = validate(this.getSchema(), this.values) || {};
+      const { errors } = this.getSchema().validate(this.values);
+      this.errors = errors;
       return Object.keys(this.errors).length == 0;
     },
 
