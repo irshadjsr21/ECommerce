@@ -21,3 +21,19 @@ export async function addProduct(body) {
     }
   });
 }
+
+export async function getProducts(query) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const queryString = query ? '?' + stringify(query) : '';
+      const res = await http.get(baseUrl + queryString);
+      if (res && res.data) {
+        resolve(res.data);
+      } else {
+        throw new Error('No data');
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

@@ -48,7 +48,7 @@
     <admin-filter
       ref="adminFilter"
       :defaultValues="defaultFilterValues"
-      v-if="showFilters"
+      v-show="showFilters"
       @close="showFilters = false"
       :options="filterOptions"
       @query="queryChanged"
@@ -104,6 +104,14 @@ export default {
                 {
                   name: 'Level',
                   value: 'level'
+                },
+                {
+                  name: 'Sub categories',
+                  value: 'subCategories'
+                },
+                {
+                  name: 'Products',
+                  value: 'products'
                 },
                 {
                   name: 'Created at',

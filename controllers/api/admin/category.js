@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const route = require('../../route');
 const validators = require('../../../validators/admin/category');
-const { Category, Sequelize, sequelize } = require('../../../models');
+const { Category, Sequelize, sequelize, Product } = require('../../../models');
 
 module.exports = {
   add: route(
@@ -174,19 +174,28 @@ module.exports = {
     if (level) query.level = level.split(',');
     if (parent) query.parentCategoryId = parent;
     if (divisions) query.canHaveDivisions = divisions == 'yes' ? true : false;
-    if (sortBy) orderArr = [[sortBy, order || 'ASC']];
+    if (sortBy) orderArr = [[sequelize.literal(sortBy), order || 'ASC']];
     const categories = await Category.findAll({
       where: query,
       order: orderArr,
       offset: (page - 1) * itemsPerPage,
       limit: itemsPerPage,
-      include: [
-        {
-          model: Category,
-          as: 'subCategories',
-          attributes: ['id']
-        }
-      ]
+      attributes: {
+        include: [
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM Categories WHERE Categories.parentCategoryId = Category.id)'
+            ),
+            'subCategories'
+          ],
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM Products WHERE Products.categoryId = Category.id)'
+            ),
+            'products'
+          ]
+        ]
+      }
     });
 
     const totalCategories = await Category.count({ where: query });
@@ -218,10 +227,26 @@ module.exports = {
     if (subCategory) {
       throw new createError(
         409,
-        'Cannot delete category because it has sub categories.',
+        'Cannot delete category because it contains sub categories.',
         {
           errors: {
-            default: 'Cannot delete category because it has sub categories.'
+            default:
+              'Cannot delete category because it contains sub categories.'
+          }
+        }
+      );
+    }
+
+    const product = await Product.findOne({
+      where: { categoryId: id }
+    });
+    if (product) {
+      throw new createError(
+        409,
+        'Cannot delete category because it contains products.',
+        {
+          errors: {
+            default: 'Cannot delete category because it contains products.'
           }
         }
       );

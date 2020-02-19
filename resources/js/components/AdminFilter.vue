@@ -94,12 +94,12 @@ export default {
 
   watch: {
     defaultValues: function(newVal) {
-      this.localValues = this.defaultValues;
+      this.localValues = { ...this.defaultValues };
     }
   },
 
   mounted() {
-    this.localValues = this.defaultValues;
+    this.localValues = { ...this.defaultValues };
     this.checkActive();
   },
 

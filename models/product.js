@@ -52,7 +52,12 @@ module.exports = (sequelize, DataTypes) => {
   Product.associate = function(models) {
     Product.belongsTo(models.Category, {
       foreignKey: 'categoryId',
-      as: 'products'
+      as: 'category'
+    });
+
+    Product.hasMany(models.ProductImage, {
+      foreignKey: 'productId',
+      as: 'images'
     });
   };
   return Product;

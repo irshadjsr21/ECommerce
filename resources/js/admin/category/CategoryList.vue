@@ -26,6 +26,8 @@
               <td>{{ category.name }}</td>
               <td>{{ category.slug }}</td>
               <td>{{ category.level }}</td>
+              <td>{{ category.subCategories }}</td>
+              <td>{{ category.products }}</td>
               <td>{{ category.canHaveDivisions ? 'Yes' : 'No' }}</td>
               <td>
                 {{
@@ -97,6 +99,16 @@ export default {
           name: 'Level',
           isSortable: true,
           key: 'level'
+        },
+        {
+          name: 'Sub categories',
+          isSortable: true,
+          key: 'subCategories'
+        },
+        {
+          name: 'Products',
+          isSortable: true,
+          key: 'products'
         },
         {
           name: 'Can have subcategories?',

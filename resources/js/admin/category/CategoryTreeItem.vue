@@ -17,13 +17,10 @@
         {{ category.name }}
       </div>
       <div class="text-mute" v-if="category.subCategories">
-        ({{ category.subCategories.length }})
+        ({{ category.subCategories }})
       </div>
     </button>
-    <ul
-      class="tree-list"
-      v-if="subCategories && subCategories.length > 0 && isOpen"
-    >
+    <ul class="tree-list" v-if="category.subCategories > 0 && isOpen">
       <category-tree-item
         v-for="subCategory of subCategories"
         :key="subCategory.name"
