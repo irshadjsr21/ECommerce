@@ -1,4 +1,7 @@
 node_modules
 public/js
 public/css
+public/images/products/*
 webpack-stats.json
+
+!public/images/products/.keep

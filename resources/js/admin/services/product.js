@@ -6,7 +6,11 @@ const baseUrl = window.adminPath + '/product';
 export async function addProduct(body) {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await http.post(baseUrl, body);
+      const res = await http.post(baseUrl, body, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       if (res && res.data) {
         resolve(res.data.product);
       } else {

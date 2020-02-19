@@ -29,6 +29,13 @@
             :error="errors.discountPrice"
             v-model="values.discountPrice"
           />
+          <file-input
+            class="mx-auto mb-l"
+            label="Main image"
+            name="mainImage"
+            :error="errors.mainImage"
+            v-model="values.mainImage"
+          />
           <select-box
             class="mx-auto mb-l"
             label="Category"
@@ -77,11 +84,12 @@ import { addProduct } from '../services/product';
 import InputBox from '../../components/InputBox';
 import SelectBox from '../../components/SelectBox';
 import TextareaInput from '../../components/TextareaInput';
+import FileInput from '../../components/FileInput';
 import MarkdownInput from '../../components/MarkdownInput';
 import schema from '../validators/product';
 
 export default {
-  components: { InputBox, SelectBox, TextareaInput, MarkdownInput },
+  components: { InputBox, SelectBox, TextareaInput, MarkdownInput, FileInput },
   data() {
     return {
       isInitialized: false,
@@ -90,14 +98,16 @@ export default {
         price: '',
         discountPrice: '',
         categoryId: '',
-        shortDescription: ''
+        shortDescription: '',
+        mainImage: null
       },
       values: {
         name: '',
         price: '',
         discountPrice: '',
         categoryId: '',
-        shortDescription: ''
+        shortDescription: '',
+        mainImage: null
       },
       errors: {},
       categoryOptions: [],
@@ -145,10 +155,14 @@ export default {
         if (!body.discountPrice) {
           delete body.discountPrice;
         }
-        addProduct(body)
+        const formData = new FormData();
+        for (const key in body) {
+          formData.append(key, body[key]);
+        }
+        addProduct(formData)
           .then(data => {
             this.$toasted.show(`Product created successfully.`);
-            this.values = this.defaultValues;
+            this.values = { ...this.defaultValues };
           })
           .catch(error => {
             if (error && error.data) {

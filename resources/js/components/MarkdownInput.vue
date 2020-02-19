@@ -22,6 +22,7 @@
                 :name="name"
                 :value="value"
                 @input="handleInput"
+                @paste="handleInput"
               ></textarea>
             </div>
             <div class="markdown-col mb-s">

@@ -121,6 +121,38 @@ const createSeoMiddleware = seo => {
 };
 
 /**
+ * Create a middleware for validating file upload
+ * @param {Object} fileUploadObject
+ */
+const createFileUploadMiddleware = ({ isRequired, name }) => {
+  return async (req, res, next) => {
+    try {
+      if (isRequired && !req.file) {
+        throw createError(400, 'Image is required.', {
+          errors: {
+            [name]: 'Image is required.'
+          }
+        });
+      }
+      if (req.file && req.file.path) {
+        let fileName = req.file.path;
+        if (fileName.startsWith('public')) {
+          fileName = fileName.slice(6);
+        }
+        if (res.locals.inputBody) {
+          res.locals.inputBody[name] = fileName;
+        } else {
+          res.locals.inputBody = { [name]: fileName };
+        }
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+/**
  * This will create a series of middleware functions to execute common tasks
  * based on the options provided.
  *
@@ -137,6 +169,10 @@ const createSeoMiddleware = seo => {
  * @param {Boolean|Array} options.oldInputs If true returns inputs in `res.locals.oldInputs`. One can also provide an array with required fields
  * @param {Object|Function} options.seo The SEO variable are stored in `res.locals`
  * @param {Object|Function} options.validationBeforeSeo The SEO variable are stored before validation
+ * @param {Object} options.fileUpload Object for file upload
+ * @param {Function} options.fileUpload.func Multer middleware for upload
+ * @param {Object} options.fileUpload.name Attribute name of uploaded file
+ * @param {Object} options.fileUpload.isRequired Is the file required or not
  */
 const route = (
   controller,
@@ -146,6 +182,11 @@ const route = (
       errorMsg: errorStrings.validationError,
       throwError: false,
       asObject: false
+    },
+    fileUpload: {
+      func: null,
+      name: null,
+      isRequired: false
     },
     seo: null,
     validationBeforeSeo: false,
@@ -164,12 +205,29 @@ const route = (
     }
   };
 
+  if (
+    options.fileUpload &&
+    options.fileUpload.func &&
+    options.fileUpload.name
+  ) {
+    middlewareArray.push(
+      options.fileUpload.func.single(options.fileUpload.name)
+    );
+
+    middlewareArray.push(createFileUploadMiddleware(options.fileUpload));
+  }
+
   if (options.inputs) {
     let fields = [];
     if (Array.isArray(options.inputs)) fields = options.inputs;
 
     middlewareArray.push((req, res, next) => {
-      res.locals.inputBody = getInputs(req, fields);
+      const inputs = getInputs(req, fields);
+      if (res.locals.inputBody) {
+        res.locals.inputBody = { ...res.locals.inputBody, ...inputs };
+      } else {
+        res.locals.inputBody = inputs;
+      }
       next();
     });
   }

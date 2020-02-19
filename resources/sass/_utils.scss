@@ -296,6 +296,21 @@ button {
     }
   }
 
+  .input-file {
+    display: none;
+  }
+
+  .input-file-btn {
+    width: fit-content;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+    background-color: $grey-darker-color;
+    box-shadow: $btn-shadow;
+  }
+
   &.input-container-row {
     flex-direction: row;
     align-items: center;

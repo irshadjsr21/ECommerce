@@ -3,7 +3,13 @@ const marked = require('marked');
 const insane = require('insane');
 const route = require('../../route');
 const validators = require('../../../validators/admin/product');
-const { Product, Category } = require('../../../models');
+const { product: uploadImage } = require('../../../middlewares/uploadImage');
+const {
+  Product,
+  ProductImage,
+  Category,
+  sequelize
+} = require('../../../models');
 
 module.exports = {
   add: route(
@@ -29,7 +35,22 @@ module.exports = {
         delete body.discountPrice;
       }
 
-      const product = await Product.create(body);
+      const mainImage = inputBody.mainImage;
+      let product;
+      delete inputBody.mainImage;
+
+      await sequelize.transaction(async transaction => {
+        product = await Product.create(body, { transaction });
+        await ProductImage.create(
+          {
+            path: mainImage,
+            isMain: true,
+            productId: product.id
+          },
+          { transaction }
+        );
+      });
+
       res.json({ product });
     },
     {
@@ -45,7 +66,12 @@ module.exports = {
         'categoryId',
         'shortDescription',
         'description'
-      ]
+      ],
+      fileUpload: {
+        func: uploadImage,
+        name: 'mainImage',
+        isRequired: true
+      }
     }
   )
 };
