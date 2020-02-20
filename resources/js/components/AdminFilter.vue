@@ -26,14 +26,14 @@
                 :name="option.name"
                 v-model="localValues[option.name]"
                 :options="option.options"
-                @input="inputChanged"
+                @input="value => inputChanged(value, option)"
                 :optionsCol="true"
               />
               <radio-input
                 v-if="!option.multiple"
                 v-model="localValues[option.name]"
                 :options="option.options"
-                @input="inputChanged"
+                @input="value => inputChanged(value, option)"
                 :optionsCol="true"
               />
             </div>
@@ -50,20 +50,20 @@
                   :name="internalOption.name"
                   v-model="localValues[internalOption.name]"
                   :options="internalOption.options"
-                  @input="inputChanged"
+                  @input="value => inputChanged(value, option, internalOption)"
                   :optionsCol="true"
                 />
                 <radio-input
                   v-if="!internalOption.multiple"
                   v-model="localValues[internalOption.name]"
                   :options="internalOption.options"
-                  @input="inputChanged"
+                  @input="value => inputChanged(value, option, internalOption)"
                   :optionsCol="true"
                 />
               </div>
             </div>
             <div class="flex justify-content-center">
-              <button @click="clearFilter(option.name)" class="btn btn-default">
+              <button @click="clearFilter(option)" class="btn btn-default">
                 Clear
               </button>
             </div>
@@ -87,7 +87,8 @@ export default {
       localValues: {},
       activeFilters: [],
       query: {},
-      filterDisplay: []
+      filterDisplay: [],
+      selectedOptions: {}
     };
   },
   components: { Modal, CheckboxInput, RadioInput },
@@ -100,7 +101,6 @@ export default {
 
   mounted() {
     this.localValues = { ...this.defaultValues };
-    this.checkActive();
   },
 
   methods: {
@@ -109,70 +109,19 @@ export default {
       else this.openFilterMenu = value;
     },
 
-    clearFilter(name) {
-      const index = this.options.findIndex(val => {
-        return val.name == name;
-      });
-      if (index != -1) {
-        if (this.options[index].hasMany) {
-          for (const elem of this.options[index].hasMany) {
+    clearFilter(option) {
+      if (option) {
+        if (option.hasMany) {
+          for (const elem of option.hasMany) {
             this.localValues[elem.name] = elem.multiple ? [] : '';
+            this.modifySelected(null, option, elem);
           }
         } else {
-          this.localValues[name] = this.options[index].multiple ? [] : '';
-        }
-        this.inputChanged();
-      }
-    },
-
-    checkActive() {
-      this.activeFilters = [];
-      const query = {};
-      this.filterDisplay = [];
-      for (const elem of this.options) {
-        if (elem.hasMany) {
-          for (const inElem of elem.hasMany) {
-            if (this.localValues[inElem.name]) {
-              if (
-                (inElem.multiple && this.localValues[inElem.name].length > 0) ||
-                !inElem.multiple
-              ) {
-                query[inElem.name] = inElem.multiple
-                  ? this.localValues[inElem.name].join(',')
-                  : this.localValues[inElem.name];
-                this.filterDisplay.push({
-                  name: elem.name,
-                  inElemName: inElem.name,
-                  displayName: inElem.label,
-                  value: query[inElem.name]
-                });
-                this.activeFilters.push(elem.name);
-              }
-            }
-          }
-        } else if (this.localValues[elem.name]) {
-          if (
-            (elem.multiple && this.localValues[elem.name].length > 0) ||
-            !elem.multiple
-          ) {
-            query[elem.name] = elem.multiple
-              ? this.localValues[elem.name].join(',')
-              : this.localValues[elem.name];
-            this.filterDisplay.push({
-              name: elem.name,
-              displayName: elem.label,
-              value: query[elem.name]
-            });
-            this.activeFilters.push(elem.name);
-          }
+          this.localValues[option.name] = option.multiple ? [] : '';
+          this.modifySelected(null, option);
         }
       }
-
-      if (JSON.stringify(query) != JSON.stringify(this.query)) {
-        this.query = query;
-        this.$emit('query', this.query);
-        this.$emit('filters', this.filterDisplay);
-      }
+      this.computeValues();
     },
 
     clearBubble(bubble) {
@@ -187,19 +136,118 @@ export default {
               !bubble.inElemName
             ) {
               this.localValues[elem.name] = elem.multiple ? [] : '';
+              this.modifySelected(null, this.options[index], elem);
             }
           }
         } else {
           this.localValues[bubble.name] = this.options[index].multiple
             ? []
             : '';
+          this.modifySelected(null, this.options[index]);
         }
-        this.inputChanged();
+      }
+
+      this.computeValues();
+    },
+
+    modifySelected(value, parentOption, internalOption) {
+      const option = internalOption || parentOption;
+      const filterName = parentOption.name;
+      const inElem = internalOption ? internalOption.name : null;
+      const label = option.label;
+
+      if (option) {
+        if (value) {
+          if (Array.isArray(value)) {
+            const arrayOptions = [];
+            for (const eachVal of value) {
+              const index = option.options.findIndex(
+                elem => elem.value == eachVal
+              );
+              arrayOptions.push(option.options[index]);
+            }
+            if (arrayOptions.length <= 0) {
+              delete this.selectedOptions[option.name];
+            } else {
+              this.selectedOptions[option.name] = {
+                selected: arrayOptions,
+                filterName,
+                inElem,
+                label
+              };
+            }
+          } else {
+            const index = option.options.findIndex(elem => elem.value == value);
+            if (index != -1) {
+              this.selectedOptions[option.name] = {
+                selected: option.options[index],
+                filterName,
+                inElem,
+                label
+              };
+            } else {
+              delete this.selectedOptions[option.name];
+            }
+          }
+        } else {
+          delete this.selectedOptions[option.name];
+        }
       }
     },
 
-    inputChanged() {
-      this.checkActive();
+    computeValues() {
+      this.activeFilters = [];
+      const query = {};
+      this.filterDisplay = [];
+
+      for (const name in this.selectedOptions) {
+        if (!this.selectedOptions[name]) break;
+
+        this.activeFilters.push(this.selectedOptions[name].filterName);
+        if (Array.isArray(this.selectedOptions[name].selected)) {
+          query[name] = this.selectedOptions[name].selected
+            .map(elem => elem.value)
+            .join(',');
+
+          const displayBody = {
+            name: this.selectedOptions[name].filterName,
+            displayName: this.selectedOptions[name].label,
+            value: this.selectedOptions[name].selected
+              .map(elem => elem.name || elem.value)
+              .join(',')
+          };
+
+          if (this.selectedOptions[name].inElem) {
+            displayBody.inElemName = this.selectedOptions[name].inElem;
+          }
+          this.filterDisplay.push(displayBody);
+        } else {
+          query[name] = this.selectedOptions[name].selected.value;
+          const displayBody = {
+            name: this.selectedOptions[name].filterName,
+            displayName: this.selectedOptions[name].label,
+            value:
+              this.selectedOptions[name].selected.name ||
+              this.selectedOptions[name].selected.name
+          };
+
+          if (this.selectedOptions[name].inElem) {
+            displayBody.inElemName = this.selectedOptions[name].inElem;
+          }
+          this.filterDisplay.push(displayBody);
+        }
+      }
+
+      if (JSON.stringify(query) != JSON.stringify(this.query)) {
+        this.query = query;
+        this.$emit('query', this.query);
+        this.$emit('filters', this.filterDisplay);
+      }
+    },
+
+    inputChanged(value, parentOption, internalOption) {
+      this.modifySelected(value, parentOption, internalOption);
+      this.computeValues();
     }
   }
 };

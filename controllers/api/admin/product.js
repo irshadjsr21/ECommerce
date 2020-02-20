@@ -84,7 +84,7 @@ module.exports = {
 
     const query = {};
     let orderArr = [['createdAt', 'ASC']];
-    if (category) query.categoryId = category;
+    if (category) query.categoryId = category.split(',');
     if (sortBy) orderArr = [[sortBy, order || 'ASC']];
     const products = await Product.findAll({
       attributes: {
